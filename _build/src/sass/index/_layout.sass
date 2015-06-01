@@ -37,3 +37,36 @@
     float: left
     +image-size("common/candle.png")
     margin: 0 33px
+
+  /* -------------------------
+   * search
+  /* -------------------------
+
+  .search_container
+    $search_width: 280px
+    $search_height: image-height("common/search.png")
+    position: absolute
+    +trbl(50%, 0, auto, 0)
+    width: $search_width
+    height: $search_height
+    margin: 170px auto 0
+
+    .search
+      float: left
+      width: $search_width - image-width("common/search.png")
+      height: $search_height
+      line-height: $search_height
+      padding: 0 10px
+      font-size: 18px
+      color: #777
+      border: solid 3px #000
+
+      &.on
+        font-size: 28px
+        color: #000
+
+    .enter
+      float: left
+      +image-size("common/search.png")
+      @extend %hoverEffect
+      @extend %activeEffect

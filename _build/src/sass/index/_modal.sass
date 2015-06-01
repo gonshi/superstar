@@ -5,7 +5,11 @@
   +trbl(0, 0, 0, 0)
   min-width: $minWidth
   min-height: $minHeight
-  background-color: rgba(0, 0, 0, 0.8)
+  background-color: rgba(0, 0, 0, 0.9)
+
+  /*------------------------
+   * movie
+  /*------------------------
 
   .youtube
     position: absolute
@@ -15,6 +19,10 @@
     margin: auto
     margin-left: -640px
 
+  /*------------------------
+   * comment
+  /*------------------------
+  
   .comment_container
     position: absolute
     +trbl(0, auto, 0, 50%)
@@ -38,3 +46,12 @@
     display: block
     line-height: 1.7
     font-size: 18px
+
+  /*------------------------
+   * skip
+  /*------------------------
+
+  .skip
+    position: fixed
+    +trbl(auto, 30px, 30px, auto)
+    color: #fff

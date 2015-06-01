@@ -1,0 +1,33 @@
+.result_container
+  display: none
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  min-width: $minWidth
+  min-height: $minHeight
+  background-color: rgba(0, 0, 0, 0.8)
+
+  .result
+    $padding: 30px
+    position: absolute
+    +trbl(0, 0, 0, 0)
+    width: 800px
+    height: 480px
+    margin: auto
+    padding: $padding
+    background-color: #fff
+    border-radius: 10px
+
+    .name
+      font-size: 36px
+
+    .episode
+      margin-top: 30px
+      font-size: 24px
+
+    .age
+      position: absolute
+      +trbl(auto, $padding, $padding, auto)
+      font-size: 32px
+
+      .num
+        font-weight: bold

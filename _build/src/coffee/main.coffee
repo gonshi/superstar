@@ -25,44 +25,64 @@ else
     window.DEBUG = state: false
 
 require "../js/velocity.min.js"
+social = require( "./util/social" )()
+episodeData = require( "./model/episodeData" )()
+modal = require( "./view/modal" )()
+search = require( "./view/search" )()
+episodeData = require( "./model/episodeData" )()
 window.DUR = 500
-indexInit = require "./indexInit"
+window.ENTER_KEY = 13
 
 $ ->
-  ###################
+  ########################
   # DECLARE
-  ###################
+  ########################
   
-  $rock = $( ".rock" )
-  $password = $( ".password" )
-  $input = $password.find( "input" )
+  $lock = $( ".lock" )
+  $password = $( ".password_container" )
+  $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
 
-  ENTER_KEY = 13
-
-  ###################
+  ########################
   # PRIVATE
-  ###################
+  ########################
 
   passCheck = ->
     _hash = CryptoJS.SHA256 $input.val()
     if _hash.toString() ==
        "a40a253fff002b6a8b08e9668c151b4a7696204765d57afb7f294e0248d56395"
-      $rock.velocity opacity: [ 0, 1 ], ->
-        $rock.hide()
-        indexInit()
+      $lock.velocity opacity: [ 0, 1 ], ->
+        $lock.hide()
+        modal.exec()
     else
       $password.velocity translateX: [ 5, 0 ], DUR / 10
       .velocity translateX: [ -5, 5 ], DUR / 10
       .velocity translateX: [ 5, -5 ], DUR / 10
       .velocity translateX: [ 0, 5 ], DUR / 10
 
-  ###################
+  ########################
   # EVENT LISTENER
-  ###################
+  ########################
 
-  $input.on "focus", -> $input.attr( type: "password" ).val ""
+  $input.one "focus", -> $input.attr( type: "password" ).val ""
 
   $enter.on "click", -> passCheck()
 
   $( window ).on "keydown", ( e )-> passCheck() if e.keyCode == ENTER_KEY
+
+  modal.listen "HIDE_MODAL", ->
+    search.exec()
+    episodeData.getData()
+
+  episodeData.listen "GOT_DATA", ( data )-> search.setEpisode data
+
+  ###################
+  # INIT
+  ###################
+
+  social.exec "fb", "tweet"
+
+  if window.DEBUG.state
+    $lock.velocity opacity: [ 0, 1 ], ->
+      $lock.hide()
+      modal.exec()

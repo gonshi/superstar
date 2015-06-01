@@ -12,24 +12,24 @@ body
   overflow: hidden
 
 /*-------------------------
- * rock
+ * lock
 /*-------------------------
 
-.rock
+.lock
   $pass_width: 300px
   $pass_height: 30px
   position: absolute
   +trbl(0, 0, 0, 0)
   background-color: $gray
 
-  .password
+  .password_container
     position: absolute
     +trbl(0, 0, 0, 0)
     width: $pass_width
     height: $pass_height
     margin: auto
 
-    input
+    .password
       float: left
       width: $pass_width - 80px
       height: $pass_height
