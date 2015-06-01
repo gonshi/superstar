@@ -1,0 +1,48 @@
+.sp
+  display: none
+
+body
+  background-color: $gray 
+
+.wrapper
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  min-width: $minWidth
+  min-height: $minHeight
+  overflow: hidden
+
+/*-------------------------
+ * rock
+/*-------------------------
+
+.rock
+  $pass_width: 300px
+  $pass_height: 30px
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  background-color: $gray
+
+  .password
+    position: absolute
+    +trbl(0, 0, 0, 0)
+    width: $pass_width
+    height: $pass_height
+    margin: auto
+
+    input
+      float: left
+      width: $pass_width - 80px
+      height: $pass_height
+      padding: 0 10px
+
+    .enter
+      float: left
+      width: 80px
+      height: $pass_height
+      background-color: #fff
+      border-left: 1px solid $gray
+      +transition(all 0.25s ease 0s)
+
+      &:hover
+        color: #fff
+        background-color: #000

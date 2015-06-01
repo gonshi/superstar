@@ -1,0 +1,27 @@
+extends /layout/_application
+block body
+  div.wrapper
+    h1.ttl
+      img(src="img/common/logo.png" alt="あなたは今何歳？")
+    div.social_container
+      include /include/embed/_tweet
+      include /include/embed/_facebook
+    div.candle_container
+      - for (var i = 0; i < 40; i++){
+        p.candle
+          img(src="img/common/candle.png" alt="ロウソク")
+      - }
+  div.modal
+    p.youtube#youtube(data-id="ZEKIKEXLR8w")
+    p.comment_container
+      span.comment(data-start="3.0") ジョン・レノンは、<br>ビートルズの楽曲 “Help!” の中で、<br>こんなことを歌っています。
+      span.comment(data-start="10.0") When I was younger,<br>so much younger than today,<br><span class="translate">(今よりずっとずっと若かった頃は<br>何をするにも人の助けなんて必要じゃなかった)</span>
+      span.comment(data-start="15.5") I never needed anybody's help in any way.<br><span class="translate">(何をするにも人の助けなんて必要じゃなかった)</span>
+      span.comment(data-start="21.0") まるで、人生を一周した<br>男のセリフのように聴こえますが<br>当時ジョンレノンは弱冠25歳。
+      span.comment(data-start="26.5") このように、<br>あの有名人はあのとき何歳だったのか？<br>というところに注目すると、<br>新しい発見があるかもしれません。
+      span.comment(data-start="32.0") あなたはいま何歳ですか？
+  div.rock
+    div.password
+      input(type="text" value="Enter Password.")
+      p.enter
+        button ENTER

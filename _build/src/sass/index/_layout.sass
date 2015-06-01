@@ -1,0 +1,39 @@
+.wrapper
+  .ttl
+    position: absolute
+    +trbl(50%, 0, auto, 0)
+    +image-size("common/logo.png")
+    margin: -300px auto 0
+
+  /* -------------------------
+   * social
+  /* -------------------------
+  .social_container
+    position: absolute
+    +trbl(30px, 30px, auto, auto)
+    width: 300px
+    height: 20px
+    +pie-clearfix
+
+  .social
+    float: right
+    max-width: 100px
+    margin-right: 15px
+
+    &:first-child
+      margin-right: 0
+
+  /* -------------------------
+   * candle
+  /* -------------------------
+  .candle_container
+    position: absolute
+    +trbl(50%, 0, auto, 0)
+    width: (image-width("common/candle.png") + 66px) * 40
+    margin-top: -60px
+    +animation(candle_slide 30s linear 0s infinite)
+
+  .candle
+    float: left
+    +image-size("common/candle.png")
+    margin: 0 33px
