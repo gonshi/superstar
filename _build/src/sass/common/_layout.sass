@@ -11,6 +11,14 @@ body
   min-height: $minHeight
   overflow: hidden
 
+  &:before
+    $bg: "common/filter.png"
+    position: absolute
+    +trbl(auto, 0, 0, 0)
+    height: image-height($bg)
+    +bg($bg, auto, repeat)
+    content: ""
+
 /*-------------------------
  * lock
 /*-------------------------

@@ -30,8 +30,11 @@ episodeData = require( "./model/episodeData" )()
 modal = require( "./view/modal" )()
 search = require( "./view/search" )()
 episodeData = require( "./model/episodeData" )()
+bg = require( "./view/bg" )()
+
 window.DUR = 500
 window.ENTER_KEY = 13
+window.path = "./"
 
 $ ->
   ########################
@@ -74,13 +77,16 @@ $ ->
     search.exec()
     episodeData.getData()
 
-  episodeData.listen "GOT_DATA", ( data )-> search.setEpisode data
+  episodeData.listen "GOT_DATA", ( data )->
+    search.setEpisode data
+    bg.setPortrait data
 
   ###################
   # INIT
   ###################
 
   social.exec "fb", "tweet"
+  bg.exec()
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->

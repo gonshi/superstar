@@ -6,11 +6,9 @@ block body
     div.social_container
       include /include/embed/_tweet
       include /include/embed/_facebook
-    div.candle_container
-      - for (var i = 0; i < 40; i++){
-        p.candle
-          img(src="img/common/candle.png" alt="ロウソク")
-      - }
+    div.portrait_container
+      div.portrait_row
+        p.portrait
     p.search_container
       input.search(type="text" value="あなたは今何歳？")
       button.enter

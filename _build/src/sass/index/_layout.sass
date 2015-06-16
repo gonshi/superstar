@@ -1,14 +1,14 @@
 .wrapper
   .ttl
     position: absolute
-    +trbl(50%, 0, auto, 0)
+    +trbl(auto, auto, 20px, 20px)
     +image-size("common/logo.png")
-    margin: -300px auto 0
 
   /* -------------------------
    * social
   /* -------------------------
   .social_container
+    display: none
     position: absolute
     +trbl(30px, 30px, auto, auto)
     width: 300px
@@ -22,6 +22,33 @@
 
     &:first-child
       margin-right: 0
+
+  /* -------------------------
+   * portrait
+  /* -------------------------
+
+  .portrait_row
+    margin-top: 30px
+    +clearfix
+
+    &:nth-child(odd)
+      +animation(slide 150s linear 0s infinite)
+    &:nth-child(even)
+      +animation(slide_another 150s linear 0s infinite)
+
+  .portrait
+    $img: "portrait/2.png"
+    $ratio: image-width($img) / 110px
+    float: left
+    +image-size($img, true, $ratio)
+    margin: 0 20px
+
+    img
+      opacity: 0
+      +transition(opacity 1s ease 0s)
+
+      &.show
+        opacity: 1
 
   /* -------------------------
    * candle
