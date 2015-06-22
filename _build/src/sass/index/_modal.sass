@@ -1,23 +1,32 @@
 .modal
-  $width: 640px
-  $height: 360px
+  $width: 466px
+  $height: 262px
+  $comment_width: 600px
+  $comment_height: 360px
   position: absolute
   +trbl(0, 0, 0, 0)
   min-width: $minWidth
   min-height: $minHeight
-  background-color: rgba(0, 0, 0, 0.9)
+  background-color: $gray
 
   /*------------------------
    * movie
   /*------------------------
 
+  .youtube_container
+    $bg: "common/tv_2.png"
+    position: absolute
+    +trbl(40%, auto, auto, 50%)
+    +image-size($bg)
+    margin-left: -0.5 * image-width($bg)
+    +bg($bg)
+    +transform-origin(center, top)
+
   .youtube
     position: absolute
-    +trbl(0, auto, 0, 50%)
+    +trbl(110px, auto, auto, 66px)
     width: $width
     height: $height
-    margin: auto
-    margin-left: -640px
 
   /*------------------------
    * comment
@@ -25,27 +34,27 @@
   
   .comment_container
     position: absolute
-    +trbl(0, auto, 0, 50%)
-    width: $width - 40px
-    height: $height
-    margin: auto
-    margin-left: 40px
-    color: #fff
+    +trbl(0, auto, auto, 50%)
+    width: $comment_width
+    height: $comment_height
+    margin-left: -0.5 * $comment_width
+    color: #000
     opacity: 0
 
   .comment
     display: none
-    width: $width - 40px
-    height: $height
+    width: $comment_width
+    height: $comment_height
     line-height: 2
     text-align: center
     vertical-align: middle
     font-size: 28px
+    font-weight: bold
+    letter-spacing: 0.5px
 
   .translate
     display: block
-    line-height: 1.7
-    font-size: 18px
+    font-size: 22px
 
   /*------------------------
    * skip
@@ -54,4 +63,4 @@
   .skip
     position: fixed
     +trbl(auto, 30px, 30px, auto)
-    color: #fff
+    color: #000

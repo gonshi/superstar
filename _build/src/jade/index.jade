@@ -1,8 +1,8 @@
 extends /layout/_application
 block body
+  h1.ttl-main
+    img(src="img/common/logo.png" alt="あなたは今何歳？")
   div.wrapper
-    h1.ttl
-      img(src="img/common/logo.png" alt="あなたは今何歳？")
     div.social_container
       include /include/embed/_tweet
       include /include/embed/_facebook
@@ -19,11 +19,12 @@ block body
       p.episode
       p.age <span class="num"></span>歳
   div.modal
-    p.youtube#youtube(data-id="ZEKIKEXLR8w")
+    div.youtube_container
+      p.youtube#youtube(data-id="ZEKIKEXLR8w")
     p.comment_container
       span.comment(data-start="3.0") ジョン・レノンは、<br>ビートルズの楽曲 “Help!” の中で、<br>こんなことを歌っています。
-      span.comment(data-start="10.0") When I was younger,<br>so much younger than today,<br><span class="translate">(今よりずっとずっと若かった頃は<br>何をするにも人の助けなんて必要じゃなかった)</span>
-      span.comment(data-start="15.5") I never needed anybody's help in any way.<br><span class="translate">(何をするにも人の助けなんて必要じゃなかった)</span>
+      span.comment.italic(data-start="10.0") 今よりずっとずっと若かった頃は<br>何をするにも人の助けなんて必要じゃなかった<br><span class="translate">When I was younger, so much younger than today,</span>
+      span.comment.italic(data-start="15.5") 何をするにも人の助けなんて必要じゃなかった<br><span class="translate">I never needed anybody's help in any way.</span>
       span.comment(data-start="21.0") まるで、人生を一周した<br>男のセリフのように聴こえますが<br>当時ジョンレノンは弱冠25歳。
       span.comment(data-start="26.5") このように、<br>あの有名人はあのとき何歳だったのか？<br>というところに注目すると、<br>新しい発見があるかもしれません。
       span.comment(data-start="32.0") あなたはいま何歳ですか？

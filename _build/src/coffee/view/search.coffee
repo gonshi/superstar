@@ -36,7 +36,7 @@ class Search
     @$episode.text info.episode
     @$age_num.text age
 
-    @$result_container.show().velocity opacity: [ 1, 0 ], DUR * 2
+    @$result_container.show().velocity opacity: [ 1, 0 ], DUR
 
   exec: ->
     ###########################
@@ -50,13 +50,24 @@ class Search
 
     @$result_container.on "click", ( e )=>
       if $( e.target ).hasClass "close"
-        @$result_container.velocity opacity: [ 0, 1 ], DUR * 2, =>
+        @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
           @$result_container.hide()
 
     @$enter.on "click", => @search @$search.val()
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
+
+    ###########################
+    # INIT
+    ###########################
+
+    setTimeout =>
+      @$search_container.velocity
+        translateY: [ 0, -20 ]
+        opacity: [ 1, 0 ]
+      , DUR * 2
+    , DUR * 2
 
 getInstance = ->
   if !instance

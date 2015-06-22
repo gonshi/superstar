@@ -13,8 +13,12 @@ class Bg
     @data = null
 
   imgLoaded: ( img_num )->
-    @img[ img_num ].onload = ->
+    _complete_func = ->
       $( ".portrait_pic_#{ img_num }" ).addClass "show"
+
+    _complete_func() if @img[ img_num ].complete
+      
+    @img[ img_num ].onload = -> _complete_func()
 
   setPortrait: ( data )->
     return if !@wrapper_width?
@@ -47,6 +51,8 @@ class Bg
           _$p = $( "<p>" ).attr class: "portrait"
 
           @img.push new Image()
+          @imgLoaded @img.length - 1
+
           _src = "#{ data[ _data_key[ _data_i ] ][ j ].portrait }"
 
           if @loaded_src[ _src ]?
@@ -59,7 +65,6 @@ class Bg
           @img[ @img.length - 1 ].className +=
             " portrait_pic_#{ @img.length - 1 }"
 
-          @imgLoaded @img.length - 1
           _$p.append @img[ @img.length - 1 ]
 
           _$p_clone.push _$p.clone()

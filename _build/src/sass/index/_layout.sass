@@ -1,9 +1,4 @@
 .wrapper
-  .ttl
-    position: absolute
-    +trbl(auto, auto, 20px, 20px)
-    +image-size("common/logo.png")
-
   /* -------------------------
    * social
   /* -------------------------
@@ -70,13 +65,15 @@
   /* -------------------------
 
   .search_container
-    $search_width: 280px
+    $search_width: 800px
     $search_height: image-height("common/search.png")
     position: absolute
     +trbl(50%, 0, auto, 0)
     width: $search_width
     height: $search_height
-    margin: 170px auto 0
+    margin: $search_height * -0.5 auto 0
+    box-shadow: 0 0 6px 0px #333
+    opacity: 0
 
     .search
       float: left
@@ -94,6 +91,17 @@
 
     .enter
       float: left
+      position: relative
       +image-size("common/search.png")
-      @extend %hoverEffect
-      @extend %activeEffect
+
+      &:before
+        position: absolute
+        +trbl(0, 0, 0, 0)
+        background-color: #fff
+        border-radius: 50px
+        content: ""
+
+      img
+        position: relative
+        @extend %hoverEffect
+        @extend %activeEffect

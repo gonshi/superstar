@@ -6,6 +6,7 @@ class Modal extends EventDispatcher
   constructor: ->
     super()
     @$modal = $( ".modal" )
+    @$youtube_container = @$modal.find( ".youtube_container" )
     @$youtube = @$modal.find( ".youtube" )
     @$comment_container = @$modal.find( ".comment_container" )
     @$comment = @$comment_container.find( ".comment" )
@@ -14,6 +15,8 @@ class Modal extends EventDispatcher
     @comment_size = @$comment.size()
     @comment_param = []
     @youtube = null
+
+    @YOUTUBE_CONTAINER_ORIGIN_HEIGHT = @$youtube_container.height()
 
     for i in [ 0...@comment_size ]
       @comment_param[ i ] = {}
@@ -59,6 +62,24 @@ class Modal extends EventDispatcher
       @$comment_container.velocity opacity: [ 0, 1 ], DUR, =>
         @$comment.eq( i ).hide()
     , 4000
+
+  setPosition: ( win_width, win_height ) ->
+    _youtube_container_target_height = win_height * 0.55
+
+    if @YOUTUBE_CONTAINER_ORIGIN_HEIGHT > _youtube_container_target_height
+      _scale =
+        _youtube_container_target_height / @YOUTUBE_CONTAINER_ORIGIN_HEIGHT
+    else
+      _scale = 1
+
+    @$youtube_container.velocity scale: _scale, DUR / 2
+
+    @$comment_container.velocity
+      height: win_height * 0.4
+      scale: _scale
+    , DUR / 2
+
+    @$comment.velocity height: win_height * 0.4, DUR / 2
 
   exec: ->
     @$skip.on "click", =>

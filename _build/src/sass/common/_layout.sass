@@ -4,6 +4,15 @@
 body
   background-color: $gray 
 
+.italic
+  font-style: italic
+
+.ttl-main
+  position: absolute
+  +trbl(auto, auto, 20px, 20px)
+  +image-size("common/logo.png")
+  z-index: index($zIndex, "ttl-main")
+
 .wrapper
   position: absolute
   +trbl(0, 0, 0, 0)

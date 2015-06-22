@@ -29,8 +29,8 @@ social = require( "./util/social" )()
 episodeData = require( "./model/episodeData" )()
 modal = require( "./view/modal" )()
 search = require( "./view/search" )()
-episodeData = require( "./model/episodeData" )()
 bg = require( "./view/bg" )()
+resizeHandler = require( "./controller/resizeHandler" )()
 
 window.DUR = 500
 window.ENTER_KEY = 13
@@ -41,6 +41,7 @@ $ ->
   # DECLARE
   ########################
   
+  $win = $( window )
   $lock = $( ".lock" )
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
@@ -81,12 +82,16 @@ $ ->
     search.setEpisode data
     bg.setPortrait data
 
+  resizeHandler.listen "RESIZED", ->
+    modal.setPosition $win.width(), $win.height()
+
   ###################
   # INIT
   ###################
 
   social.exec "fb", "tweet"
   bg.exec()
+  resizeHandler.dispatch "RESIZED"
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->
