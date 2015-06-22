@@ -39,6 +39,7 @@ class Bg
     @$portrait_container.empty()
 
     @img = []
+    @loaded_src = {} # save src and cache buster param
 
     while _cur_row < _row_max
       for j in [ 0...data[ _data_key[ _data_i ] ].length ]
@@ -46,8 +47,14 @@ class Bg
           _$p = $( "<p>" ).attr class: "portrait"
 
           @img.push new Image()
-          @img[ @img.length - 1 ].src =
-            "#{ data[ _data_key[ _data_i ] ][ j ].portrait }?_=#{ Date.now() }"
+          _src = "#{ data[ _data_key[ _data_i ] ][ j ].portrait }"
+
+          if @loaded_src[ _src ]?
+            @img[ @img.length - 1 ].src = "#{ _src }?_=#{ @loaded_src[ _src ] }"
+          else
+            _date = Date.now()
+            @img[ @img.length - 1 ].src = "#{ _src }?_=#{ _date }"
+            @loaded_src[ _src ] = _date
 
           @img[ @img.length - 1 ].className +=
             " portrait_pic_#{ @img.length - 1 }"
