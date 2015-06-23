@@ -37,6 +37,7 @@ class EpisodeData extends EventDispatcher
         @episode[ _age ] = [] if !@episode[ _age ]?
 
         @episode[ _age ].push
+          id: @episode[ _age ].length
           name: response.feed.entry[ i ].title.$t
           episode: response.feed.entry[ i ].content.$t.match( @episodeExp )[ 1 ]
           birth: response.feed.entry[ i ].content.$t.match( @birthExp )[ 1 ]

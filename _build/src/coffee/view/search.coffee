@@ -2,6 +2,8 @@ instance = null
 
 class Search
   constructor: ->
+    @$win = $( window )
+
     @$search_container = $( ".search_container" )
     @$search = @$search_container.find( ".search" )
     @$enter = @$search_container.find( ".enter" )
@@ -13,6 +15,7 @@ class Search
     @$name = @$result.find( ".name" )
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age .num" )
+    @$link = @$result.find( ".link" )
 
     # year
     @$year_container = $( ".year_container" )
@@ -24,26 +27,15 @@ class Search
     @cur_year_left = 0
 
     @RESULT_PADDING_HEIGHT = 130
+    @ESCAPE_KEYCODE = 27
+
+    @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
 
     @win_width = null
 
-  setEpisode: ( episode )-> @episode = episode
-
-  search: ( age )->
-    return if @search_interval
-
-    @search_interval = setInterval => # 連打防止
-      if @episode?
-        clearInterval @search_interval
-        @search_interval = null
-        
-        if !@episode[ age ]?
-          alert "該当する人物なし"
-          return
-
-        _id = Math.floor( Math.random() * @episode[ age ].length )
-        @showResult age, _id
-    , 200
+  setEpisode: ( episode )->
+    @episode = episode
+    @origin_episode = $.extend true, {}, episode
 
   dropPin: ( year )->
     # 年号アニメーション & ピン落とす
@@ -65,14 +57,37 @@ class Search
         translateY: [ 0, -20 ]
       , DUR, [ 200, 10 ], => @$result_container.removeClass "is_animating"
 
+  search: ( age )->
+    return if @search_interval
+
+    @search_interval = setInterval => # 連打防止
+      if @episode?
+        clearInterval @search_interval
+        @search_interval = null
+        
+        if !@episode[ age ]?
+          alert "該当する人物なし"
+          return
+
+        _id = Math.floor( Math.random() * @episode[ age ].length )
+        @showResult age, @episode[ age ][ _id ].id
+
+        @episode[ age ].splice _id, 1 # 同じ人が連続で出ないように
+
+        if @episode[ age ].length == 0
+          @episode[ age ] = $.extend true, [], @origin_episode[ age ]
+    , 200
+
   showResult: ( age, id )->
-    _info = @episode[ age ][ id ]
+    _info = @origin_episode[ age ][ id ]
 
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text _info.name
     @$episode.text _info.episode
     @$age_num.text age
+    @$link.find( "a" ).attr
+      href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
     if _info.portrait.length > 0
       _img = new Image()
@@ -88,6 +103,12 @@ class Search
     @$result.css
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
+  closeResult: ->
+    @$pin.velocity opacity: [ 0, 1 ], DUR
+
+    @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
+      @$result_container.hide()
+
   setWinWidth: ( win_width )-> @win_width = win_width
 
   exec: ->
@@ -102,11 +123,14 @@ class Search
 
     @$result_container.on "click", ( e )=>
       return if @$result_container.hasClass "is_animating"
-      if $( e.target ).hasClass "close"
-        @$pin.velocity opacity: [ 0, 1 ], DUR
+      @closeResult() if $( e.target ).hasClass "close"
 
-        @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
-          @$result_container.hide()
+    @$win.on "keydown", ( e )=>
+      if @$result_container.hasClass "is_animating" ||
+         @$result_container.css( "display" ) == "none"
+        return
+      
+      @closeResult() if e.keyCode == @ESCAPE_KEYCODE
 
     @$enter.on "click", => @search @$search.val()
 
