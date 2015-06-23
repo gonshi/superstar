@@ -4,7 +4,7 @@
   +trbl(0, 0, 0, 0)
   min-width: $minWidth
   min-height: $minHeight
-  background-color: rgba(0, 0, 0, 0.8)
+  background-color: rgba(255, 255, 255, 0.8)
 
   &.withoutPortrait
     .result
@@ -16,14 +16,15 @@
         width: auto
 
   .result
-    $padding: 60px
+    $padding: 30px
     position: absolute
-    +trbl(0, 0, 0, 0)
-    width: 800px
-    height: 480px
+    +trbl(0, 0, $footer_height, 0)
+    width: 640px
+    min-height: 360px
     margin: auto
-    padding: $padding + 50px $padding $padding $padding
+    padding: $padding + 70px $padding $padding $padding
     background-color: rgba(255, 255, 255, 0.9)
+    border: 3px solid #000
     border-radius: 10px
 
     .candle
@@ -40,7 +41,7 @@
 
     .info
       float: right
-      width: 460px
+      width: 390px
 
     .name
       font-size: 24px
@@ -48,10 +49,10 @@
 
     .episode
       margin-top: 10px
-      font-size: 16px
+      font-size: 14px
 
     .age
-      margin-top: 30px
+      margin-top: 10px
       text-align: right
       font-size: 28px
 

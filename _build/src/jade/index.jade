@@ -22,6 +22,14 @@ block body
         p.name
         p.episode
         p.age <span class="num"></span>歳
+  div.year_container
+    - var year;
+    - for(var i=0; i<250; i++){
+      - year = i * 10;
+      p.year(data-year="#{year}") #{year}
+    - }
+    p.pin
+      img(src="img/common/pin.png" alt="ピン")
   div.modal
     div.youtube_container
       p.youtube#youtube(data-id="ZEKIKEXLR8w")

@@ -9,6 +9,7 @@ class EpisodeData extends EventDispatcher
 
     @ageExp = /年齢: (.*?),/
     @episodeExp = /エピソード: (.*?),/
+    @birthExp = /生年: (.*?),/
     @portraitExp = /画像: (.*?)$/
     @END_PHRASE = "以下未記述欄"
 
@@ -38,6 +39,7 @@ class EpisodeData extends EventDispatcher
         @episode[ _age ].push
           name: response.feed.entry[ i ].title.$t
           episode: response.feed.entry[ i ].content.$t.match( @episodeExp )[ 1 ]
+          birth: response.feed.entry[ i ].content.$t.match( @birthExp )[ 1 ]
           portrait: _portrait
 
       @dispatch "GOT_DATA", this, @episode

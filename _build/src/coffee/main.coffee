@@ -42,6 +42,7 @@ $ ->
   ########################
   
   $win = $( window )
+  $wrapper = $( ".wrapper" )
   $lock = $( ".lock" )
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
@@ -83,15 +84,25 @@ $ ->
     bg.setPortrait data
 
   resizeHandler.listen "RESIZED", ->
-    modal.setPosition $win.width(), $win.height()
+    _win_width = $win.width()
+    _win_height = $win.height()
+    _wrapper_width = $wrapper.width()
+    _wrapper_height = $wrapper.height()
+
+    modal.setPosition _win_width, _win_height
+    search.setWinWidth _win_width
+    bg.setSize _wrapper_width, _wrapper_height
+    bg.arragePortrait()
+  
+  bg.listen "PORTRAIT_CLICKED", ( age, id )-> search.showResult age, id
 
   ###################
   # INIT
   ###################
 
   social.exec "fb", "tweet"
-  bg.exec()
   resizeHandler.dispatch "RESIZED"
+  resizeHandler.exec()
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->

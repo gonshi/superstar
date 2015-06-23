@@ -26,10 +26,11 @@
     margin-top: 30px
     +clearfix
 
-    &:nth-child(odd)
-      +animation(slide 150s linear 0s infinite)
-    &:nth-child(even)
-      +animation(slide_another 150s linear 0s infinite)
+    &.anim
+      &:nth-child(odd)
+        +animation(slide 150s linear 0s infinite)
+      &:nth-child(even)
+        +animation(slide_another 150s linear 0s infinite)
 
   .portrait
     $img: "portrait/2.png"
@@ -37,6 +38,10 @@
     float: left
     +image-size($img, true, $ratio)
     margin: 0 20px
+
+    button
+      @extend %hoverEffect
+      @extend %activeEffect
 
     img
       opacity: 0
@@ -46,21 +51,6 @@
         opacity: 1
 
   /* -------------------------
-   * candle
-  /* -------------------------
-  .candle_container
-    position: absolute
-    +trbl(50%, 0, auto, 0)
-    width: (image-width("common/candle.png") + 66px) * 40
-    margin-top: -60px
-    +animation(candle_slide 30s linear 0s infinite)
-
-  .candle
-    float: left
-    +image-size("common/candle.png")
-    margin: 0 33px
-
-  /* -------------------------
    * search
   /* -------------------------
 
@@ -68,10 +58,10 @@
     $search_width: 800px
     $search_height: image-height("common/search.png")
     position: absolute
-    +trbl(50%, 0, auto, 0)
+    +trbl(0, 0, $footer_height, 0)
     width: $search_width
     height: $search_height
-    margin: $search_height * -0.5 auto 0
+    margin: auto
     box-shadow: 0 0 6px 0px #333
     opacity: 0
 
@@ -98,7 +88,6 @@
         position: absolute
         +trbl(0, 0, 0, 0)
         background-color: #fff
-        border-radius: 50px
         content: ""
 
       img

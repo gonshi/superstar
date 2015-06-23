@@ -14,12 +14,25 @@ class Search
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age .num" )
 
+    # year
+    @$year_container = $( ".year_container" )
+    @$year = @$year_container.find( ".year" )
+    @$pin = @$year_container.find( ".pin" )
+    @YEAR_WIDTH = parseInt( @$year.eq( 1 ).css "left" ) / 10 # ten year
+    @PIN_WIDTH = parseInt @$pin.width()
+
+    @cur_year_left = 0
+
+    @RESULT_PADDING_HEIGHT = 130
+
+    @win_width = null
+
   setEpisode: ( episode )-> @episode = episode
 
   search: ( age )->
     return if @search_interval
 
-    @search_interval = setInterval =>
+    @search_interval = setInterval => # 連打防止
       if @episode?
         clearInterval @search_interval
         @search_interval = null
@@ -28,26 +41,54 @@ class Search
           alert "該当する人物なし"
           return
 
-        _index = Math.floor( Math.random() * @episode[ age ].length )
-        @showResult age, @episode[ age ][ _index ]
+        _id = Math.floor( Math.random() * @episode[ age ].length )
+        @showResult age, _id
     , 200
 
-  showResult: ( age, info )->
-    @$result_container.removeClass "withoutPortrait"
+  dropPin: ( year )->
+    # 年号アニメーション & ピン落とす
+    @$pin.css
+      left: @YEAR_WIDTH * year - @PIN_WIDTH / 2
+      opacity: 0
 
-    @$name.text info.name
-    @$episode.text info.episode
+    _next_year_left = @win_width / 2 -
+                      @$pin.get( 0 ).getBoundingClientRect().left +
+                      @cur_year_left
+
+    @$year_container.velocity
+      translateX: _next_year_left
+    , DUR * 2, =>
+      @cur_year_left = _next_year_left
+
+      @$pin.velocity
+        opacity: [ 1, 0 ]
+        translateY: [ 0, -20 ]
+      , DUR, [ 200, 10 ], => @$result_container.removeClass "is_animating"
+
+  showResult: ( age, id )->
+    _info = @episode[ age ][ id ]
+
+    @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
+
+    @$name.text _info.name
+    @$episode.text _info.episode
     @$age_num.text age
 
-    if info.portrait.length > 0
+    if _info.portrait.length > 0
       _img = new Image()
-      _img.src = info.portrait
+      _img.src = _info.portrait
       @$portrait.empty()
       @$portrait.append _img
     else
       @$result_container.addClass "withoutPortrait"
 
-    @$result_container.show().velocity opacity: [ 1, 0 ], DUR
+    @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
+      @dropPin parseInt( age ) + parseInt( _info.birth )
+
+    @$result.css
+      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+
+  setWinWidth: ( win_width )-> @win_width = win_width
 
   exec: ->
     ###########################
@@ -60,7 +101,10 @@ class Search
       .addClass "on"
 
     @$result_container.on "click", ( e )=>
+      return if @$result_container.hasClass "is_animating"
       if $( e.target ).hasClass "close"
+        @$pin.velocity opacity: [ 0, 1 ], DUR
+
         @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
           @$result_container.hide()
 
