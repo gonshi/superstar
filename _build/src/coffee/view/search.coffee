@@ -9,6 +9,7 @@ class Search
     # result
     @$result_container = $( ".result_container" )
     @$result = @$result_container.find( ".result" )
+    @$portrait = @$result.find( ".portrait" )
     @$name = @$result.find( ".name" )
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age .num" )
@@ -32,9 +33,19 @@ class Search
     , 200
 
   showResult: ( age, info )->
+    @$result_container.removeClass "withoutPortrait"
+
     @$name.text info.name
     @$episode.text info.episode
     @$age_num.text age
+
+    if info.portrait.length > 0
+      _img = new Image()
+      _img.src = info.portrait
+      @$portrait.empty()
+      @$portrait.append _img
+    else
+      @$result_container.addClass "withoutPortrait"
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR
 
