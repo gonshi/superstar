@@ -18,6 +18,7 @@ module.exports = function(grunt) {
             'coffeelint',
             'copy:img',
             'copy:js',
+            'copy:audio',
             'jade:compile',
             'compass:dev',
             'server'
@@ -32,6 +33,7 @@ module.exports = function(grunt) {
             'uglify:apps',
             'copy:imgProd',
             'copy:jsProd',
+            'copy:audioProd',
             'compass:prod',
             'jade:prod'
         ]);
@@ -45,6 +47,7 @@ module.exports = function(grunt) {
             'uglify:apps',
             'copy:imgProd',
             'copy:jsProd',
+            'copy:audioProd',
             'compass:prod',
             'jade:deploy'
         ]);

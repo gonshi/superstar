@@ -47,7 +47,7 @@ class Modal extends EventDispatcher
             @showComment i
             return
 
-      #@$skip.trigger "click" if window.DEBUG.state
+      @$skip.trigger "click" if window.DEBUG.state
 
     @youtube.addEventListener "onStateChange", ( state )=>
       if state.data == YT.PlayerState.ENDED

@@ -1,3 +1,4 @@
+ticker = require( "../util/ticker" )()
 instance = null
 
 class Search
@@ -32,6 +33,10 @@ class Search
     @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
 
     @win_width = null
+
+    # sound
+    @roulette_sound = new Audio()
+    @roulette_sound.src = "audio/roulette.mp3"
 
   setEpisode: ( episode )->
     @episode = episode
@@ -85,7 +90,7 @@ class Search
 
     @$name.text _info.name
     @$episode.text _info.episode
-    @$age_num.text age
+    @$age_num.text ""
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
@@ -99,6 +104,16 @@ class Search
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @dropPin parseInt( age ) + parseInt( _info.birth )
+
+      @roulette_sound.play()
+      ticker.listen "AGE_COUNTUP", ( t )=>
+        _age = Math.floor( t / 30 )
+        if _age > age
+          ticker.clear "AGE_COUNTUP"
+          @roulette_sound.pause()
+          @roulette_sound.currentTime = 0
+        else
+          @$age_num.text _age
 
     @$result.css
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT

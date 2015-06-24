@@ -11,6 +11,11 @@ class Bg extends EventDispatcher
     @PORTRAIT_HEIGHT = $( ".portrait" ).height()
     @PORTRAIT_ROW_MARGIN = parseInt( $( ".portrait_row" ).css "margin-top" )
 
+    ###
+    @mouseover_sound = new Audio()
+    @mouseover_sound.src = "audio/click_bip.wav"
+    ###
+
     @loaded_src = {} # save src and cache buster param
 
   imgLoaded: ( img_num )->
@@ -107,6 +112,12 @@ class Bg extends EventDispatcher
       @dispatch "PORTRAIT_CLICKED", this,
                 $( e.currentTarget ).find( "img" ).attr( "data-age" ),
                 $( e.currentTarget ).find( "img" ).attr( "data-id" )
+
+    ###
+    @$portrait.on "mouseenter", =>
+      @mouseover_sound.currentTime = 0
+      @mouseover_sound.play()
+    ###
 
   setSize: ( wrapper_width, wrapper_height )->
     @wrapper_width = wrapper_width
