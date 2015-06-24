@@ -37,6 +37,8 @@ class Modal extends EventDispatcher
         wmode: "opaque"
 
     @youtube.addEventListener "onReady", =>
+      @$youtube = @$modal.find( ".youtube" )
+
       @youtube.playVideo()
       ticker.listen "CHECK_MOVIE_CURTIME", =>
         _cur_time = @youtube.getCurrentTime()
@@ -47,10 +49,13 @@ class Modal extends EventDispatcher
             @showComment i
             return
 
-      @$skip.trigger "click" if window.DEBUG.state
+      #@$skip.trigger "click" if window.DEBUG.state
 
     @youtube.addEventListener "onStateChange", ( state )=>
-      if state.data == YT.PlayerState.ENDED
+      if state.data == YT.PlayerState.PLAYING
+        @$youtube.css opacity: 1
+      else if state.data == YT.PlayerState.ENDED
+        @$youtube.css opacity: 0
         ticker.clear "CHECK_MOVIE_CURTIME"
         @$modal.velocity opacity: [ 0, 1 ], DUR * 2, =>
           @$modal.hide()
