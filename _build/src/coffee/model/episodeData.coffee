@@ -28,9 +28,11 @@ class EpisodeData extends EventDispatcher
         break if response.feed.entry[ i ].title.$t == @END_PHRASE
         _age = response.feed.entry[ i ].content.$t.match( @ageExp )[ 1 ]
 
-        if response.feed.entry[ i ].content.$t.
-           match( @portraitExp )[ 1 ] != "なし"
-          _portrait = "#{ path }img/portrait/#{ i + 2 }.png"
+        _portrait_id =
+          response.feed.entry[ i ].content.$t.match( @portraitExp )[ 1 ]
+
+        if _portrait_id != "なし"
+          _portrait = "#{ path }img/portrait/#{ _portrait_id }.png"
         else
           _portrait = ""
 

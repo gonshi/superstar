@@ -10,6 +10,7 @@ class Modal extends EventDispatcher
     @$youtube = @$modal.find( ".youtube" )
     @$comment_container = @$modal.find( ".comment_container" )
     @$comment = @$comment_container.find( ".comment" )
+    @$underline = @$comment_container.find( ".underline" )
     @$skip = @$modal.find( ".skip" )
 
     @comment_size = @$comment.size()
@@ -46,7 +47,7 @@ class Modal extends EventDispatcher
             @showComment i
             return
 
-      @$skip.trigger "click" if window.DEBUG.state
+      #@$skip.trigger "click" if window.DEBUG.state
 
     @youtube.addEventListener "onStateChange", ( state )=>
       if state.data == YT.PlayerState.ENDED
@@ -56,8 +57,19 @@ class Modal extends EventDispatcher
           @dispatch "HIDE_MODAL"
 
   showComment: ( i )->
+    if i == @$comment.size() - 1 # 下線アニメーション
+      @$comment.eq( i ).show()
+      _comment_width = @$comment.eq( i ).width()
+
+      setTimeout =>
+        @$underline.css
+          left: ( @$comment_container.width() - _comment_width ) / 2
+        @$underline.velocity width: [ _comment_width, 0 ], DUR * 2
+      , DUR * 2
+
     @$comment.eq( i ).css display: "table-cell"
     @$comment_container.velocity opacity: [ 1, 0 ], DUR * 2
+
     setTimeout =>
       @$comment_container.velocity opacity: [ 0, 1 ], DUR, =>
         @$comment.eq( i ).hide()
@@ -75,11 +87,11 @@ class Modal extends EventDispatcher
     @$youtube_container.velocity scale: _scale, DUR / 2
 
     @$comment_container.velocity
-      height: win_height * 0.4
+      height: win_height * 0.3
       scale: _scale
     , DUR / 2
 
-    @$comment.velocity height: win_height * 0.4, DUR / 2
+    @$comment.velocity height: win_height * 0.3, DUR / 2
 
   exec: ->
     @$skip.on "click", =>
