@@ -139,6 +139,14 @@ class Search
 
   setWinWidth: ( win_width )-> @win_width = win_width
 
+  showSearchBar: ->
+    return if parseInt( @$search_container.css "opacity" ) != 0
+
+    @$search_container.velocity
+      translateY: [ 0, -20 ]
+      opacity: [ 1, 0 ]
+    , DUR * 2
+
   exec: ->
     ###########################
     # EVENT LISTENER
@@ -164,17 +172,6 @@ class Search
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
-
-    ###########################
-    # INIT
-    ###########################
-
-    setTimeout =>
-      @$search_container.velocity
-        translateY: [ 0, -20 ]
-        opacity: [ 1, 0 ]
-      , DUR * 2
-    , DUR * 2
 
 getInstance = ->
   if !instance

@@ -21,8 +21,12 @@ class Bg extends EventDispatcher
     @loaded_src = {} # save src and cache buster param
 
   imgLoaded: ( img_num )->
-    _complete_func = ->
+    _complete_func = =>
       $( ".portrait_pic_#{ img_num }" ).addClass "show"
+
+      @portrait_shown_num += 1
+      if @portrait_num != null && @portrait_shown_num == @portrait_num
+        @dispatch "FIN_ARRANGE"
 
     _complete_func() if @img[ img_num ].complete
       
@@ -50,7 +54,12 @@ class Bg extends EventDispatcher
     _cur_row = 0
     _data_i = 0
 
+    _portrait_num = 0
+
     @$portrait_container.empty()
+
+    @portrait_shown_num = 0
+    @portrait_num = null
 
     @img = []
 
@@ -104,6 +113,8 @@ class Bg extends EventDispatcher
 
       _data_i += 1
       _data_i = 0 if _data_i == _data_length
+
+    @portrait_num = @$portrait_container.find( ".portrait" ).size()
 
     @$portrait_container.css
       marginTop: ( @wrapper_height - @FOOTER_HEIGHT -

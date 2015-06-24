@@ -96,6 +96,8 @@ $ ->
   
   bg.listen "PORTRAIT_CLICKED", ( age, id )-> search.showResult age, id
 
+  bg.listen "FIN_ARRANGE", -> search.showSearchBar()
+
   ###################
   # INIT
   ###################
