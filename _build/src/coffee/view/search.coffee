@@ -37,6 +37,13 @@ class Search
     # sound
     @roulette_sound = new Audio()
     @roulette_sound.src = "audio/roulette.mp3"
+    @roulette_sound.volume = 0.2
+
+    @open_sound = new Audio()
+    @open_sound.src = "audio/open.mp3"
+
+    @close_sound = new Audio()
+    @close_sound.src = "audio/close.mp3"
 
   setEpisode: ( episode )->
     @episode = episode
@@ -64,6 +71,9 @@ class Search
 
   search: ( age )->
     return if @search_interval
+
+    @open_sound.currentTime = 0
+    @open_sound.play()
 
     @search_interval = setInterval => # 連打防止
       if @episode?
@@ -119,6 +129,9 @@ class Search
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
   closeResult: ->
+    @close_sound.currentTime = 0
+    @close_sound.play()
+
     @$pin.velocity opacity: [ 0, 1 ], DUR
 
     @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
