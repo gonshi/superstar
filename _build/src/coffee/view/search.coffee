@@ -20,6 +20,7 @@ class Search
 
     # year
     @$year_container = $( ".year_container" )
+    @$year_bar = $( ".year_bar" )
     @$year = @$year_container.find( ".year" )
     @$pin = @$year_container.find( ".pin" )
     @YEAR_WIDTH = parseInt( @$year.eq( 1 ).css "left" ) / 10 # ten year
@@ -59,7 +60,7 @@ class Search
                       @$pin.get( 0 ).getBoundingClientRect().left +
                       @cur_year_left
 
-    @$year_container.velocity
+    @$year_bar.velocity
       translateX: _next_year_left
     , DUR * 2, =>
       @cur_year_left = _next_year_left

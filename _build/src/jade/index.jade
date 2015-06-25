@@ -25,13 +25,14 @@ block body
         p.link
           a(href="./" target="_blank") 詳細を見る
   div.year_container
-    - var year;
-    - for(var i=0; i<250; i++){
-      - year = i * 10;
-      p.year(data-year="#{year}") #{year}
-    - }
-    p.pin
-      img(src="img/common/pin.png" alt="ピン")
+    div.year_bar
+      - var year;
+      - for(var i=0; i<250; i++){
+        - year = i * 10;
+        p.year(data-year="#{year}") #{year}
+      - }
+      p.pin
+        img(src="img/common/pin.png" alt="ピン")
   div.modal
     div.youtube_container
       p.youtube#youtube(data-id="ZEKIKEXLR8w")
