@@ -8,7 +8,7 @@ class EpisodeData extends EventDispatcher
     @episode = {}
 
     @ageExp = /年齢: (.*?),/
-    @episodeExp = /エピソード: (.*?),/
+    @episodeExp = /一言エピソード: (.*?),/
     @birthExp = /生年: (.*?),/
     @portraitExp = /画像: (.*?)$/
     @END_PHRASE = "以下未記述欄"

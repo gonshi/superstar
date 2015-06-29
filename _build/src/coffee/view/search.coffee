@@ -114,7 +114,10 @@ class Search
       @$result_container.addClass "withoutPortrait"
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
-      @dropPin parseInt( age ) + parseInt( _info.birth )
+      if _info.birth != "不明"
+        @dropPin parseInt( age ) + parseInt( _info.birth )
+      else
+        @$result_container.removeClass "is_animating"
 
       @roulette_sound.play()
       ticker.listen "AGE_COUNTUP", ( t )=>
