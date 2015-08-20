@@ -27,7 +27,6 @@ else
 require "../js/velocity.min.js"
 social = require( "./util/social" )()
 episodeData = require( "./model/episodeData" )()
-modal = require( "./view/modal" )()
 search = require( "./view/search" )()
 bg = require( "./view/bg" )()
 resizeHandler = require( "./controller/resizeHandler" )()
@@ -40,7 +39,7 @@ $ ->
   ########################
   # DECLARE
   ########################
-  
+
   $win = $( window )
   $wrapper = $( ".wrapper" )
   $lock = $( ".lock" )
@@ -58,7 +57,6 @@ $ ->
        "a40a253fff002b6a8b08e9668c151b4a7696204765d57afb7f294e0248d56395"
       $lock.velocity opacity: [ 0, 1 ], ->
         $lock.hide()
-        modal.exec()
     else
       $password.velocity translateX: [ 5, 0 ], DUR / 10
       .velocity translateX: [ -5, 5 ], DUR / 10
@@ -75,10 +73,6 @@ $ ->
 
   $( window ).on "keydown", ( e )-> passCheck() if e.keyCode == ENTER_KEY
 
-  modal.listen "HIDE_MODAL", ->
-    search.exec()
-    episodeData.getData()
-
   episodeData.listen "GOT_DATA", ( data )->
     search.setEpisode data
     bg.setPortrait data
@@ -89,11 +83,10 @@ $ ->
     _wrapper_width = $wrapper.width()
     _wrapper_height = $wrapper.height()
 
-    modal.setPosition _win_width, _win_height
     search.setWinWidth _win_width
     bg.setSize _wrapper_width, _wrapper_height
     bg.arragePortrait()
-  
+
   bg.listen "PORTRAIT_CLICKED", ( age, id )-> search.showResult age, id
 
   bg.listen "FIN_ARRANGE", -> search.showSearchBar()
@@ -105,8 +98,9 @@ $ ->
   social.exec "fb", "tweet"
   resizeHandler.dispatch "RESIZED"
   resizeHandler.exec()
+  search.exec()
+  episodeData.getData()
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->
       $lock.hide()
-      modal.exec()
