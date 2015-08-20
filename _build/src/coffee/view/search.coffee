@@ -80,7 +80,7 @@ class Search
       if @episode?
         clearInterval @search_interval
         @search_interval = null
-        
+
         if !@episode[ age ]?
           alert "該当する人物なし"
           return
@@ -93,6 +93,36 @@ class Search
         if @episode[ age ].length == 0
           @episode[ age ] = $.extend true, [], @origin_episode[ age ]
     , 200
+
+  showIntro: ->
+    @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
+
+    @$name.text "ここに出てくる偉人は全員"
+    @$episode.text "泣いた。"
+    @$age_num.text "0"
+    @$link.find( "a" ).attr
+      href: ""
+
+    _img = new Image()
+    _img.src = "img/common/egg.png"
+    @$portrait.empty()
+    @$portrait.append _img
+
+    @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
+      @$result_container.removeClass "is_animating"
+
+      @roulette_sound.play()
+      ticker.listen "AGE_COUNTUP", ( t )=>
+        _age = Math.floor( t / 30 )
+        if _age > 0
+          ticker.clear "AGE_COUNTUP"
+          @roulette_sound.pause()
+          @roulette_sound.currentTime = 0
+        else
+          @$age_num.text _age
+
+    @$result.css
+      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
   showResult: ( age, id )->
     _info = @origin_episode[ age ][ id ]
@@ -155,7 +185,7 @@ class Search
     ###########################
     # EVENT LISTENER
     ###########################
-    
+
     @$search.one "click", =>
       @$search.attr type: "number"
       .val( "" )
@@ -169,7 +199,7 @@ class Search
       if @$result_container.hasClass "is_animating" ||
          @$result_container.css( "display" ) == "none"
         return
-      
+
       @closeResult() if e.keyCode == @ESCAPE_KEYCODE
 
     @$enter.on "click", => @search @$search.val()

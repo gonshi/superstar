@@ -99,7 +99,8 @@ $ ->
   resizeHandler.dispatch "RESIZED"
   resizeHandler.exec()
   search.exec()
-  episodeData.getData()
+  search.showIntro()
+  #episodeData.getData()
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->

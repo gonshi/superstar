@@ -5,7 +5,7 @@ body
   position: relative
   min-height: $minHeight
   height: 100vh
-  background-color: $gray 
+  background-color: $gray
 
 .italic
   font-style: italic
@@ -13,7 +13,7 @@ body
 .ttl-main
   position: absolute
   +trbl(auto, auto, 20px, 20px)
-  +image-size("common/logo.png")
+  +image-size("common/logo.png", true, 2.4)
   z-index: index($zIndex, "ttl-main")
 
 .wrapper
