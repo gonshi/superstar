@@ -12,7 +12,6 @@
         display: none
 
       .info
-        float: none
         width: auto
 
   .result
@@ -22,35 +21,35 @@
     width: 640px
     min-height: 360px
     margin: auto
-    padding: $padding + 70px $padding $padding $padding
+    padding: $padding
     background-color: rgba(254, 253, 245, 0.9)
     border: 3px solid #000
     border-radius: 10px
 
     .portrait
       $img: "portrait/2.png"
-      $ratio: image-width($img) / 160px
-      float: left
+      $ratio: image-width($img) / 120px
       +image-size($img, true, $ratio)
+      margin: 20px auto 0
 
     .info
-      float: right
       width: 390px
+      line-height: 1.4
+      margin: 0 auto
+      text-align: center
+      font-size: 24px
 
     .name
-      font-size: 24px
       font-weight: bold
 
-    .episode
-      margin-top: 10px
-      font-size: 14px
-
-    .age
-      margin-top: 10px
-      text-align: right
-      font-size: 28px
+    .age_container
+      .age
+        margin: 0 5px
+        font-size: 28px
+        font-weight: bold
 
       .num
+        margin: 0 5px
         font-weight: bold
 
     .link
@@ -59,3 +58,8 @@
       font-weight: bold
       text-decoration: underline
       text-align: right
+
+    .logo
+      position: absolute
+      +trbl(auto, 35px, 35px, auto)
+      +image-size("common/logo.png", true, 2)

@@ -15,13 +15,13 @@ block body
         img(src="img/common/search.png" alt="探す")
   div.result_container.close
     div.result
-      p.portrait
       div.info
         p.name
-        p.age <span class="num"></span>歳のときに、
+        p.age_container <span class="age"><span class="num"></span>歳</span>のとき、
         p.episode
-        p.link
-          a(href="./" target="_blank") 詳細を見る
+      p.portrait
+      p.logo
+        img(src="img/common/logo.png" alt="あなたは今何歳？")
   div.year_container
     div.year_bar
       - var year;

@@ -15,7 +15,7 @@ class Search
     @$portrait = @$result.find( ".portrait" )
     @$name = @$result.find( ".name" )
     @$episode = @$result.find( ".episode" )
-    @$age_num = @$result.find( ".age .num" )
+    @$age_num = @$result.find( ".age_container .num" )
     @$link = @$result.find( ".link" )
 
     # year
@@ -98,10 +98,8 @@ class Search
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text "ここに出てくる偉人は全員"
-    @$episode.text "泣いた。"
+    @$episode.text "初めて泣いた。"
     @$age_num.text "0"
-    @$link.find( "a" ).attr
-      href: ""
 
     _img = new Image()
     _img.src = "img/common/egg.png"
@@ -132,8 +130,8 @@ class Search
     @$name.text _info.name
     @$episode.text _info.episode
     @$age_num.text ""
-    @$link.find( "a" ).attr
-      href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
+    #@$link.find( "a" ).attr
+    #  href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
     if _info.portrait.length > 0
       _img = new Image()
