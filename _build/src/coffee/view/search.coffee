@@ -50,6 +50,9 @@ class Search
     @episode = episode
     @origin_episode = $.extend true, {}, episode
 
+  setPortrait: ( src, img_num )-> # introページのportrait
+    console.log src, img_num
+
   dropPin: ( year )->
     # 年号アニメーション & ピン落とす
     @$pin.css

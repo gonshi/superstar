@@ -19,17 +19,19 @@ class Bg extends EventDispatcher
     @open_sound.src = "audio/open.mp3"
 
     @loaded_src = {} # save src and cache buster param
+    @count = 0
 
   imgLoaded: ( img_num )->
     _complete_func = =>
-      $( ".portrait_pic_#{ img_num }" ).addClass "show"
+      @dispatch "LOAD_IMG", this, @img[ img_num ].src, img_num
+      #$( ".portrait_pic_#{ img_num }" ).addClass "show"
 
       @portrait_shown_num += 1
       if @portrait_num != null && @portrait_shown_num == @portrait_num
         @dispatch "FIN_ARRANGE"
 
     _complete_func() if @img[ img_num ].complete
-      
+
     @img[ img_num ].onload = -> _complete_func()
 
   setPortrait: ( data )->

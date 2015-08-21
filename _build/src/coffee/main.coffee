@@ -77,6 +77,9 @@ $ ->
     search.setEpisode data
     bg.setPortrait data
 
+  bg.listen "LOAD_IMG", ( src, img_num )->
+    search.setPortrait src, img_num
+
   resizeHandler.listen "RESIZED", ->
     _win_width = $win.width()
     _win_height = $win.height()
@@ -89,7 +92,7 @@ $ ->
 
   bg.listen "PORTRAIT_CLICKED", ( age, id )-> search.showResult age, id
 
-  bg.listen "FIN_ARRANGE", -> search.showSearchBar()
+  #bg.listen "FIN_ARRANGE", -> search.showSearchBar()
 
   ###################
   # INIT
@@ -100,7 +103,7 @@ $ ->
   resizeHandler.exec()
   search.exec()
   search.showIntro()
-  #episodeData.getData()
+  episodeData.getData()
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->
