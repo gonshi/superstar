@@ -30,6 +30,8 @@ class Search
     # 背景のportraitにもアクセスできるようにする)
     @$portrait_container = $( ".portrait_container" )
 
+    @portrait_loaded = []
+
     @cur_year_left = 0
 
     @RESULT_PADDING_HEIGHT = 130
@@ -58,7 +60,6 @@ class Search
       @$portrait_container.find( ".portrait_row" ).width()
 
     for i in [ diffuse_from..diffuse_to ]
-      console.log i
       _$portrait = @$portrait.find( "img" ).eq i
       _portrait_id = _$portrait.attr( "id" )
 
@@ -78,20 +79,12 @@ class Search
             _rand
           )
 
-        # イマココ 存在しないportrait_pic_idがあるぽい
-        console.log _portrait_id
-        console.log(
-          @$portrait_container.
-          find( ".portrait_pic_#{ _portrait_id }" ).
-          size()
-        )
-        console.log _rand
         break unless _targetPortrait.className.match "selected"
 
       _targetPortrait.className += " selected"
 
       do (_$portrait, _targetPortrait)->
-        _delay = 100 * ( diffuse_from - i )
+        _delay = 50 * ( diffuse_from - i )
 
         if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
           _vec = -1
@@ -137,21 +130,11 @@ class Search
       @loaded_portrait_num += 1
 
       if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX / 3 )
-        @diffusePortrait Math.floor( @PORTRAIT_MAX / 3 ) - 1, 0
+        @portrait_loaded[ 0 ] = true
       else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX * 2 / 3 )
-        setTimeout =>
-          @diffusePortrait(
-            Math.floor( @PORTRAIT_MAX * 2 / 3 ) - 1,
-            Math.floor( @PORTRAIT_MAX / 3 )
-          )
-        , 15000
+        @portrait_loaded[ 1 ] = true
       else if @loaded_portrait_num == @PORTRAIT_MAX
-        setTimeout =>
-          @diffusePortrait(
-            @PORTRAIT_MAX - 1,
-            Math.floor( @PORTRAIT_MAX * 2 / 3 )
-          )
-        , 30000
+        @portrait_loaded[ 2 ] = true
 
   dropPin: ( year )->
     # 年号アニメーション & ピン落とす
@@ -203,8 +186,6 @@ class Search
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text "ここに出てくる偉人は全員"
-    @$episode.text "初めて泣いた。"
-    @$age_num.text "0"
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"
@@ -221,6 +202,38 @@ class Search
 
     @$result.css
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+
+    ticker.listen "TIMER_FROM_START", ( t )=>
+      for i in [ 0...3 ]
+        if t > 10000 * i  # 10秒置きにキャラが出現
+          if @portrait_loaded[ i ] # ロードが完了したタイミングで
+            @$portrait.find( "img" ).eq(
+              Math.floor( @PORTRAIT_MAX * ( i + 1 ) / 3 ) - 1
+            ).css opacity: 1
+            @portrait_loaded[ i ] = null
+
+            @$age_num.text i
+
+            switch i
+              when 0
+                @$episode.text "初めて泣いた。"
+              when 1
+                @$episode.text "前に進んだ。"
+              when 2
+                @$episode.text "笑った。"
+                ticker.clear "TIMER_FROM_START"
+
+            @$result.find( ".info" ).velocity opacity: 1, DUR * 4
+
+            do ( i )=>
+              setTimeout =>
+                @diffusePortrait(
+                  Math.floor( @PORTRAIT_MAX * ( i + 1 ) / 3 ) - 1,
+                  Math.floor( @PORTRAIT_MAX * i / 3 )
+                )
+
+                @$result.find( ".info" ).velocity opacity: 0, DUR * 4
+              , 3000
 
   showResult: ( age, id )->
     _info = @origin_episode[ age ][ id ]
