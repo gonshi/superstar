@@ -19,7 +19,6 @@ class Bg extends EventDispatcher
     @open_sound.src = "audio/open.mp3"
 
     @loaded_src = {} # save src and cache buster param
-    @count = 0
 
   imgLoaded: ( img_num )->
     _complete_func = =>
@@ -92,12 +91,15 @@ class Bg extends EventDispatcher
           _$btn.append @img[ @img.length - 1 ]
           _$p.append _$btn
 
-          _$p_clone.push _$p.clone()
+          _$p_clone.push _$p.clone() # 1人の画像を1つの列に2枚置きます。
+                                     # これはスライドでループするときに
+                                     # シームレスに繋げるためです。
 
           _$p.appendTo _$portrait_row
 
           _count += 1
 
+          # 1列の最大値まで画像が達したら、折返すように同じ画像を再度配置します。
           if _count == @ROW_MAX
             _count = 0
 
@@ -117,6 +119,7 @@ class Bg extends EventDispatcher
       _data_i = 0 if _data_i == _data_length
 
     @portrait_num = @$portrait_container.find( ".portrait" ).size()
+    @dispatch "PORTRAIT_COUNTED", this, @portrait_num
 
     @$portrait_container.css
       marginTop: ( @wrapper_height - @FOOTER_HEIGHT -

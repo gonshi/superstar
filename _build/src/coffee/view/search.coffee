@@ -26,6 +26,10 @@ class Search
     @YEAR_WIDTH = parseInt( @$year.eq( 1 ).css "left" ) / 10 # ten year
     @PIN_WIDTH = parseInt @$pin.width()
 
+    # portrait container (introのアニメーションのため、
+    # 背景のportraitにもアクセスできるようにする)
+    @$portrait_container = $( ".portrait_container" )
+
     @cur_year_left = 0
 
     @RESULT_PADDING_HEIGHT = 130
@@ -46,12 +50,108 @@ class Search
     @close_sound = new Audio()
     @close_sound.src = "audio/close.mp3"
 
+    # loaded portrait count (for intro)
+    @loaded_portrait_num = 0
+
+  diffusePortrait: ( diffuse_from, diffuse_to )->
+    _portrait_row_width =
+      @$portrait_container.find( ".portrait_row" ).width()
+
+    for i in [ diffuse_from..diffuse_to ]
+      console.log i
+      _$portrait = @$portrait.find( "img" ).eq i
+      _portrait_id = _$portrait.attr( "id" )
+
+      loop
+        _rand = (
+          Math.floor(
+            Math.random() * @$portrait_container.
+            find( ".portrait_pic_#{ _portrait_id }" ).
+            size()
+          )
+        )
+
+        _targetPortrait =
+          @$portrait_container.
+          find( ".portrait_pic_#{ _portrait_id }" ).
+          get(
+            _rand
+          )
+
+        # イマココ 存在しないportrait_pic_idがあるぽい
+        console.log _portrait_id
+        console.log(
+          @$portrait_container.
+          find( ".portrait_pic_#{ _portrait_id }" ).
+          size()
+        )
+        console.log _rand
+        break unless _targetPortrait.className.match "selected"
+
+      _targetPortrait.className += " selected"
+
+      do (_$portrait, _targetPortrait)->
+        _delay = 100 * ( diffuse_from - i )
+
+        if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
+          _vec = -1
+        else
+          _vec = 1
+
+        _$portrait.css
+          position: "fixed"
+          top: _$portrait.get( 0 ).getBoundingClientRect().top
+          left: _$portrait.get( 0 ).getBoundingClientRect().left
+          width: _$portrait.width()
+          height: _$portrait.height()
+          opacity: 1
+        .velocity
+          top: _targetPortrait.getBoundingClientRect().top
+          left: _targetPortrait.getBoundingClientRect().left +
+                _portrait_row_width / 2 / 150 *
+                ( 2 + _delay / 1000 ) * _vec
+                # 150: transition sec, 2: duration sec
+          width: _targetPortrait.offsetWidth
+          height: _targetPortrait.offsetHeight
+          opacity: [ 0.2, 1 ]
+        ,
+          duration: DUR * 4
+          delay: _delay
+          complete: ->
+            _$portrait.hide()
+            _targetPortrait.className += " show"
+
   setEpisode: ( episode )->
     @episode = episode
     @origin_episode = $.extend true, {}, episode
 
   setPortrait: ( src, img_num )-> # introページのportrait
-    console.log src, img_num
+    return unless src
+
+    _pic = new Image()
+    _pic.src = src
+    _pic.setAttribute "id", img_num
+
+    for i in [ 0...2 ]
+      @$portrait.append $( _pic ).clone()
+      @loaded_portrait_num += 1
+
+      if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX / 3 )
+        @diffusePortrait Math.floor( @PORTRAIT_MAX / 3 ) - 1, 0
+      else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX * 2 / 3 )
+        setTimeout =>
+          @diffusePortrait(
+            Math.floor( @PORTRAIT_MAX * 2 / 3 ) - 1,
+            Math.floor( @PORTRAIT_MAX / 3 )
+          )
+        , 15000
+      else if @loaded_portrait_num == @PORTRAIT_MAX
+        setTimeout =>
+          @diffusePortrait(
+            @PORTRAIT_MAX - 1,
+            Math.floor( @PORTRAIT_MAX * 2 / 3 )
+          )
+        , 30000
 
   dropPin: ( year )->
     # 年号アニメーション & ピン落とす
@@ -97,17 +197,14 @@ class Search
           @episode[ age ] = $.extend true, [], @origin_episode[ age ]
     , 200
 
+  setPortraitMax: ( num )-> @PORTRAIT_MAX = num
+
   showIntro: ->
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text "ここに出てくる偉人は全員"
     @$episode.text "初めて泣いた。"
     @$age_num.text "0"
-
-    _img = new Image()
-    _img.src = "img/common/egg.png"
-    @$portrait.empty()
-    @$portrait.append _img
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"

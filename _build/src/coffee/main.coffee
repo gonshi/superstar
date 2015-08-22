@@ -92,6 +92,8 @@ $ ->
 
   bg.listen "PORTRAIT_CLICKED", ( age, id )-> search.showResult age, id
 
+  bg.listen "PORTRAIT_COUNTED", ( num )-> search.setPortraitMax num
+
   #bg.listen "FIN_ARRANGE", -> search.showSearchBar()
 
   ###################

@@ -29,8 +29,14 @@
     .portrait
       $img: "portrait/2.png"
       $ratio: image-width($img) / 120px
+      position: relative
       +image-size($img, true, $ratio)
       margin: 20px auto 0
+
+      img
+        position: absolute
+        +trbl(0, auto, auto, 0)
+        opacity: 0
 
     .info
       width: 390px
