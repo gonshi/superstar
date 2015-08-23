@@ -46,6 +46,7 @@ $ ->
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
+  is_intro = false
 
   ########################
   # PRIVATE
@@ -81,6 +82,7 @@ $ ->
     search.setPortrait src, img_num
 
   resizeHandler.listen "RESIZED", ->
+    location.reload() if is_intro
     _win_width = $win.width()
     _win_height = $win.height()
     _wrapper_width = $wrapper.width()
@@ -94,9 +96,19 @@ $ ->
 
   bg.listen "PORTRAIT_COUNTED", ( num )-> search.setPortraitMax num
 
+  search.listen "FIN_INTRO", ->
+    is_intro = false
+    bg.finIntro()
+
   ###################
   # INIT
   ###################
+
+  if location.search == "?skip"
+    window.skip = true
+    window.DUR = 10
+  else
+    window.skip = false
 
   social.exec "fb", "tweet"
   resizeHandler.dispatch "RESIZED"
@@ -104,6 +116,8 @@ $ ->
   search.exec()
   search.showIntro()
   episodeData.getData()
+
+  is_intro = true
 
   if window.DEBUG.state
     $lock.velocity opacity: [ 0, 1 ], ->

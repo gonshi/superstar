@@ -22,9 +22,10 @@
     min-height: 360px
     margin: auto
     padding: $padding
-    background-color: rgba(254, 253, 245, 0.95)
+    background-color: rgba(254, 253, 245, 0.9)
     border: 3px solid #000
     border-radius: 10px
+    opacity: 0
 
     .portrait
       $img: "portrait/2.png"
@@ -46,13 +47,40 @@
       font-size: 24px
       opacity: 0
 
+    .yahoo-msg
+      display: none
+      text-align: center
+      opacity: 0
+
+    .yahoo-msg-1
+      margin-top: 30px
+
+    .yahoo-msg-2
+      position: relative
+      margin-top: 60px
+
+      &:after
+        position: absolute
+        +trbl(auto, auto, -12px, 50px)
+        width: 0
+        height: 6px
+        background-color: #000
+        border-radius: 4px
+        +transition(width, 2s, ease 0s)
+        content: ""
+
+      &.underline
+        &:after
+          width: image-width("common/yahoo-msg-2.png") + 20px
+
     .name
+      font-size: 36px
       font-weight: bold
 
     .age_container
       .age
         margin: 0 5px
-        font-size: 28px
+        font-size: 36px
         font-weight: bold
 
       .num

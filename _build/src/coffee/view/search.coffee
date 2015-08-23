@@ -1,8 +1,11 @@
+EventDispatcher = require( "../util/eventDispatcher" )
+
 ticker = require( "../util/ticker" )()
 instance = null
 
-class Search
+class Search extends EventDispatcher
   constructor: ->
+    super()
     @$win = $( window )
 
     @$search_container = $( ".search_container" )
@@ -30,15 +33,12 @@ class Search
     # 背景のportraitにもアクセスできるようにする)
     @$portrait_container = $( ".portrait_container" )
 
+    # values
     @portrait_loaded = []
-
     @cur_year_left = 0
-
-    @RESULT_PADDING_HEIGHT = 130
+    @RESULT_PADDING_HEIGHT = 247
     @ESCAPE_KEYCODE = 27
-
     @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
-
     @win_width = null
 
     # sound
@@ -55,7 +55,7 @@ class Search
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
-  diffusePortrait: ( diffuse_num )->
+  diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _portrait_row_width =
       @$portrait_container.find( ".portrait_row" ).width()
 
@@ -71,7 +71,7 @@ class Search
       _$portrait.addClass "selected"
       _portrait_id = _$portrait.attr( "data-id" )
 
-      loop
+      loop # ランダムに、かつ未選択のターゲットportrait(背景側のportrait)を選ぶ
         _rand = (
           Math.floor(
             Math.random() * @$portrait_container.
@@ -83,30 +83,34 @@ class Search
         _targetPortrait =
           @$portrait_container.
           find( ".portrait_pic_#{ _portrait_id }" ).
-          get(
-            _rand
-          )
+          get _rand
 
         break unless _targetPortrait.className.match "selected"
 
-      _targetPortrait.className += " selected"
+      _targetPortrait.className += " selected" # 選ばれたものにはチェックをつける
 
       do (_$portrait, _targetPortrait)->
-        _dur = DUR * 6
-        _delay = 0 * i
+        if skip
+          _dur = 0
+          _delay = 0
+        else
+          _dur = DUR * 6
+          _delay = 10 * i
 
         if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
           _vec = -1
         else
           _vec = 1
 
+        # モーダル上の位置から、背景側の
+        # 同一ポートレートの位置までアニメーションさせる
         _$portrait.css
           position: "fixed"
           top: _$portrait.get( 0 ).getBoundingClientRect().top
           left: _$portrait.get( 0 ).getBoundingClientRect().left
           width: _$portrait.width()
           height: _$portrait.height()
-        .velocity
+        .velocity # 横位置
           left: _targetPortrait.getBoundingClientRect().left +
                 _portrait_row_width / 2 / 150 *
                 ( ( _dur + _delay ) / 1000 ) * _vec
@@ -122,7 +126,7 @@ class Search
             _$portrait.remove()
             _targetPortrait.className += " show"
 
-        _$portrait.velocity
+        _$portrait.velocity # 縦位置
           top: _targetPortrait.getBoundingClientRect().top
         ,
           duration: _dur
@@ -134,18 +138,20 @@ class Search
     @episode = episode
     @origin_episode = $.extend true, {}, episode
 
-  setPortrait: ( src, img_num )-> # introページのportrait
+  setPortrait: ( src, img_num )-> # introページのportraitをモーダル上にappendしていいく
     return unless src
 
     _pic = new Image()
     _pic.src = src
     _pic.setAttribute "data-id", img_num
 
-    for i in [ 0...2 ]
+    for i in [ 0...2 ] # 背景側も、スライド用に各画像2枚ずつあるので、こちらでも2枚ずつ置いていく
       @$portrait.append $( _pic ).clone()
       @loaded_portrait_num += 1
 
       if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX / 3 )
+        # 読み込み終えたことをチェックする。tickerのTIMER_FROM_STARTで
+        # この値を監視し、trueであれば(画像用意が完了していれば)diffuseイベントを開始させる
         @portrait_loaded[ 0 ] = true
       else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX * 2 / 3 )
         @portrait_loaded[ 1 ] = true
@@ -162,7 +168,7 @@ class Search
                       @$pin.get( 0 ).getBoundingClientRect().left +
                       @cur_year_left
 
-    @$year_bar.velocity
+    @$year_bar.velocity # 該当位置までバーをスライドさせる
       translateX: _next_year_left
     , DUR * 2, =>
       @cur_year_left = _next_year_left
@@ -190,7 +196,7 @@ class Search
         _id = Math.floor( Math.random() * @episode[ age ].length )
         @showResult age, @episode[ age ][ _id ].id
 
-        @episode[ age ].splice _id, 1 # 同じ人が連続で出ないように
+        @episode[ age ].splice _id, 1 # 同じ人が連続で出ないようにする
 
         if @episode[ age ].length == 0
           @episode[ age ] = $.extend true, [], @origin_episode[ age ]
@@ -201,7 +207,9 @@ class Search
   showIntro: ->
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
-    @$name.text "ここに出てくる偉人は全員"
+    @$name.text "ここに出てくる偉人はみんな"
+    @$name.css fontSize: 28
+    @$result.find( ".name_particle" ).hide() # "は(助詞)" を消す
 
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"
@@ -216,21 +224,23 @@ class Search
         else
           @$age_num.text _age
 
-    @$result.css
-      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+    _wait_span = if skip then 0 else 8000
 
     ticker.listen "TIMER_FROM_START", ( t )=>
       for i in [ 0...3 ]
-        if t > 12000 * i  # 12秒置きにキャラが出現
+        if t > _wait_span * i  # _wait_span(ms) 置きにdiffuseイベントを発生させる
           if @portrait_loaded[ i ] # ロードが完了したタイミングで
+            if i == 1 && @portrait_loaded[ 0 ] != null ||
+               i == 2 && @portrait_loaded[ 1 ] != null
+              return # 1つ前のフェーズが終わっていなければ開始しない
+
             if i == 2
               _diffuse_num = @PORTRAIT_MAX -
                              Math.floor( @PORTRAIT_MAX * 1 / 3 ) * 2
             else
               _diffuse_num = Math.floor( @PORTRAIT_MAX * 1 / 3 )
 
-            @portrait_loaded[ i ] = null
-
+            @portrait_loaded[ i ] = null # null は、そのフェーズが終了したことを表す
             @$age_num.text i
 
             switch i
@@ -242,15 +252,22 @@ class Search
                 @$episode.text "笑った。"
                 ticker.clear "TIMER_FROM_START"
 
+            @$result.css
+              height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+              opacity: 1
+
             @$result.find( ".info" ).velocity opacity: 1, DUR * 4
 
             do ( i )=>
               setTimeout =>
                 @diffusePortrait _diffuse_num
-                @$result.find( ".info" ).velocity opacity: 0, DUR * 4
-              , 3000
+                @$result.find( ".info" ).velocity opacity: 0
+                ,
+                  duration: DUR * 4
+                  delay: DUR * 2
+              , DUR * 6
 
-              if i == 2
+              if i == 2 # イントロ終了。本編への繋ぎ演出を行う。
                 setTimeout =>
                   @$result.velocity
                     backgroundColorAlpha: 0
@@ -275,8 +292,10 @@ class Search
                             @$result.removeAttr "style"
                             @$result.find( ".info" ).removeAttr "style"
                             @$result.find( ".logo" ).removeAttr "style"
+                            @$result.find( ".name_particle" ).show()
+                            @dispatch "FIN_INTRO"
                           @showSearchBar()
-                , 9000
+                , DUR * 18
 
   showResult: ( age, id )->
     _info = @origin_episode[ age ][ id ]
@@ -286,12 +305,28 @@ class Search
     @$name.text _info.name
     @$episode.text _info.episode
     @$age_num.text ""
-    #@$link.find( "a" ).attr
-    #  href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
+    @$link.find( "a" ).attr
+      href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
+
+    # set layout
+    if _info.name.length > 11
+      @$name.css fontSize: 28
+    else if _info.name.length > 10
+      @$name.css fontSize: 32
+    else
+      @$name.css fontSize: 36
+
+    @$result.css
+      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+      opacity: 1
+
+    @$result.find( ".info" ).css opacity: 1
+    @$result.find( ".portrait" ).show()
 
     if _info.portrait.length > 0
       _img = new Image()
       _img.src = _info.portrait
+      _img.style.opacity = 1
       @$portrait.empty()
       @$portrait.append _img
     else
@@ -310,6 +345,22 @@ class Search
           ticker.clear "AGE_COUNTUP"
           @roulette_sound.pause()
           @roulette_sound.currentTime = 0
+
+          setTimeout => # Yahoo! 仕様 FINALE表示
+            @$result.velocity
+              width: 720
+              height: 450
+            , DUR, =>
+              @$result.find( ".info, .portrait, .logo" ).velocity
+                opacity: 0
+              , DUR, =>
+                @$result.find( ".info, .portrait, .logo" ).hide()
+                @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
+                  setTimeout =>
+                    @$result.find( ".yahoo-msg-2" ).addClass "underline"
+                  , DUR * 2
+                , DUR
+          , DUR * 10
         else
           @$age_num.text _age
 
@@ -317,6 +368,7 @@ class Search
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
   closeResult: ->
+    return # Yahoo!仕様, 1度きりしか見られないようにする？
     @close_sound.currentTime = 0
     @close_sound.play()
 

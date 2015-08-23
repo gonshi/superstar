@@ -15,8 +15,14 @@ block body
         img(src="img/common/search.png" alt="探す")
   div.result_container.close
     div.result
+      div.yahoo-msg
+        p.yahoo-msg-1
+          img(src="img/common/yahoo-msg-1.png" alt="Yahoo!は年齢を気にしない。あなたの挑戦も、好奇心も、Yahoo!がお手伝いします。")
+        p.yahoo-msg-2
+          a(href="http://yahoo.co.jp" target="_blank")
+            img(src="img/common/yahoo-msg-2.png" alt="男の子からおばあちゃんまで、Yahoo!検索")
       div.info
-        p.name
+        p.name_container <span class="name"></span><span class="name_particle">は</span>
         p.age_container <span class="age"><span class="num"></span>歳</span>のとき、
         p.episode
       p.portrait
