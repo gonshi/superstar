@@ -71,10 +71,7 @@ class Bg extends EventDispatcher
           _$btn = $( "<button>" )
 
           @img.push new Image()
-          @imgLoaded @img.length - 1
-
           _src = "#{ @data[ _data_key[ _data_i ] ][ j ].portrait }"
-
           @img[ @img.length - 1 ].setAttribute "data-age", _data_key[ _data_i ]
           @img[ @img.length - 1 ].setAttribute "data-id", j
 
@@ -103,7 +100,10 @@ class Bg extends EventDispatcher
           if _count == @ROW_MAX
             _count = 0
 
-            _$p_clone[ i ].appendTo _$portrait_row for i in [ 0...@ROW_MAX ]
+            for i in [ 0...@ROW_MAX ]
+              _$p_clone[ i ].appendTo _$portrait_row
+              @imgLoaded @img.length - 1 - i # load完了イベント登録
+
             _$p_clone = []
 
             _$portrait_row.appendTo @$portrait_container

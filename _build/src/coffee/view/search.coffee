@@ -55,13 +55,21 @@ class Search
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
-  diffusePortrait: ( diffuse_from, diffuse_to )->
+  diffusePortrait: ( diffuse_num )->
     _portrait_row_width =
       @$portrait_container.find( ".portrait_row" ).width()
 
-    for i in [ diffuse_from..diffuse_to ]
-      _$portrait = @$portrait.find( "img" ).eq i
-      _portrait_id = _$portrait.attr( "id" )
+    for i in [ 0...diffuse_num ]
+      loop
+        if i == 0
+          _i = diffuse_num - 1
+        else
+          _i = Math.floor( Math.random() * @$portrait.find( "img" ).size() )
+        break unless @$portrait.find( "img" ).eq( _i ).hasClass "selected"
+
+      _$portrait = @$portrait.find( "img" ).eq _i
+      _$portrait.addClass "selected"
+      _portrait_id = _$portrait.attr( "data-id" )
 
       loop
         _rand = (
@@ -84,7 +92,7 @@ class Search
       _targetPortrait.className += " selected"
 
       do (_$portrait, _targetPortrait)->
-        _delay = 50 * ( diffuse_from - i )
+        _delay = 50 * i
 
         if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
           _vec = -1
@@ -97,7 +105,6 @@ class Search
           left: _$portrait.get( 0 ).getBoundingClientRect().left
           width: _$portrait.width()
           height: _$portrait.height()
-          opacity: 1
         .velocity
           top: _targetPortrait.getBoundingClientRect().top
           left: _targetPortrait.getBoundingClientRect().left +
@@ -111,7 +118,7 @@ class Search
           duration: DUR * 4
           delay: _delay
           complete: ->
-            _$portrait.hide()
+            _$portrait.remove()
             _targetPortrait.className += " show"
 
   setEpisode: ( episode )->
@@ -123,7 +130,7 @@ class Search
 
     _pic = new Image()
     _pic.src = src
-    _pic.setAttribute "id", img_num
+    _pic.setAttribute "data-id", img_num
 
     for i in [ 0...2 ]
       @$portrait.append $( _pic ).clone()
@@ -205,12 +212,18 @@ class Search
 
     ticker.listen "TIMER_FROM_START", ( t )=>
       for i in [ 0...3 ]
-        if t > 10000 * i  # 10秒置きにキャラが出現
+        if t > 12000 * i  # 12秒置きにキャラが出現
           if @portrait_loaded[ i ] # ロードが完了したタイミングで
-            @$portrait.find( "img" ).eq(
-              Math.floor( @PORTRAIT_MAX * ( i + 1 ) / 3 ) - 1
-            ).css opacity: 1
+            if i == 2
+              _diffuse_num = @PORTRAIT_MAX -
+                             Math.floor( @PORTRAIT_MAX * 1 / 3 ) * 2
+            else
+              _diffuse_num = Math.floor( @PORTRAIT_MAX * 1 / 3 )
+
             @portrait_loaded[ i ] = null
+
+            @$portrait.find( "img" ).eq( _diffuse_num - 1 ).
+            css opacity: 1
 
             @$age_num.text i
 
@@ -227,11 +240,7 @@ class Search
 
             do ( i )=>
               setTimeout =>
-                @diffusePortrait(
-                  Math.floor( @PORTRAIT_MAX * ( i + 1 ) / 3 ) - 1,
-                  Math.floor( @PORTRAIT_MAX * i / 3 )
-                )
-
+                @diffusePortrait _diffuse_num
                 @$result.find( ".info" ).velocity opacity: 0, DUR * 4
               , 3000
 
