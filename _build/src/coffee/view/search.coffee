@@ -284,7 +284,7 @@ class Search extends EventDispatcher
                       @$result.find( ".logo" ).velocity opacity: 0
                       ,
                         duration: DUR * 2
-                        delay: DUR * 2
+                        delay: DUR * 6
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]
                           , DUR * 2, =>
@@ -303,7 +303,7 @@ class Search extends EventDispatcher
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text _info.name
-    @$episode.text _info.episode
+    @$episode.html _info.episode
     @$age_num.text ""
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
@@ -347,6 +347,7 @@ class Search extends EventDispatcher
           @roulette_sound.currentTime = 0
 
           setTimeout => # Yahoo! 仕様 FINALE表示
+            return if skip
             @$result.velocity
               width: 720
               height: 450
