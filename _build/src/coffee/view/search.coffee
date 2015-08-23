@@ -56,6 +56,8 @@ class Search extends EventDispatcher
     @loaded_portrait_num = 0
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
+    _result_rect = @$result.get( 0 ).getBoundingClientRect()
+
     _portrait_row_width =
       @$portrait_container.find( ".portrait_row" ).width()
 
@@ -102,6 +104,22 @@ class Search extends EventDispatcher
         else
           _vec = 1
 
+        _target_left =
+          _targetPortrait.getBoundingClientRect().left +
+          _portrait_row_width / 2 / 150 *
+          ( ( _dur + _delay ) / 1000 ) * _vec
+          # 150: transition sec, 2: duration sec
+
+        _target_top = _targetPortrait.getBoundingClientRect().top
+
+        if _target_left + _targetPortrait.offsetWidth > _result_rect.left &&
+           _target_left < _result_rect.right &&
+           _target_top + _targetPortrait.offsetHeight > _result_rect.top &&
+           _target_top < _result_rect.bottom
+          _target_opacity = 0.02 # 移動先がモーダルの裏に隠れている場合、その明度に合わせる
+        else
+          _target_opacity = 0.2
+
         # モーダル上の位置から、背景側の
         # 同一ポートレートの位置までアニメーションさせる
         _$portrait.css
@@ -111,13 +129,10 @@ class Search extends EventDispatcher
           width: _$portrait.width()
           height: _$portrait.height()
         .velocity # 横位置
-          left: _targetPortrait.getBoundingClientRect().left +
-                _portrait_row_width / 2 / 150 *
-                ( ( _dur + _delay ) / 1000 ) * _vec
-                # 150: transition sec, 2: duration sec
+          left: _target_left
           width: _targetPortrait.offsetWidth
           height: _targetPortrait.offsetHeight
-          opacity: [ 0.2, 0 ]
+          opacity: [ _target_opacity, 0 ]
         ,
           duration: _dur
           delay: _delay
@@ -126,8 +141,7 @@ class Search extends EventDispatcher
             _$portrait.remove()
             _targetPortrait.className += " show"
 
-        _$portrait.velocity # 縦位置
-          top: _targetPortrait.getBoundingClientRect().top
+        _$portrait.velocity top: _target_top # 縦位置
         ,
           duration: _dur
           delay: _delay
