@@ -92,6 +92,7 @@ class Search
       _targetPortrait.className += " selected"
 
       do (_$portrait, _targetPortrait)->
+        _dur = DUR * 4
         _delay = 50 * i
 
         if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
@@ -106,20 +107,28 @@ class Search
           width: _$portrait.width()
           height: _$portrait.height()
         .velocity
-          top: _targetPortrait.getBoundingClientRect().top
           left: _targetPortrait.getBoundingClientRect().left +
                 _portrait_row_width / 2 / 150 *
-                ( 2 + _delay / 1000 ) * _vec
+                ( ( _dur + _delay ) / 1000 ) * _vec
                 # 150: transition sec, 2: duration sec
           width: _targetPortrait.offsetWidth
           height: _targetPortrait.offsetHeight
-          opacity: [ 0.2, 1 ]
+          opacity: [ 0.2, 0 ]
         ,
-          duration: DUR * 4
+          duration: _dur
           delay: _delay
+          easing: "easeOutSine"
           complete: ->
             _$portrait.remove()
             _targetPortrait.className += " show"
+
+        _$portrait.velocity
+          top: _targetPortrait.getBoundingClientRect().top
+        ,
+          duration: _dur
+          easing: "easeInSine"
+          queue: false
+
 
   setEpisode: ( episode )->
     @episode = episode
@@ -221,9 +230,6 @@ class Search
               _diffuse_num = Math.floor( @PORTRAIT_MAX * 1 / 3 )
 
             @portrait_loaded[ i ] = null
-
-            @$portrait.find( "img" ).eq( _diffuse_num - 1 ).
-            css opacity: 1
 
             @$age_num.text i
 
