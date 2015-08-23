@@ -22,7 +22,7 @@
     min-height: 360px
     margin: auto
     padding: $padding
-    background-color: rgba(254, 253, 245, 0.9)
+    background-color: rgba(254, 253, 245, 0.95)
     border: 3px solid #000
     border-radius: 10px
 
@@ -70,3 +70,5 @@
       position: absolute
       +trbl(auto, 35px, 35px, auto)
       +image-size("common/logo.png", true, 2)
+      +bg("common/logo.svg")
+      @extend %hideText

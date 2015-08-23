@@ -94,8 +94,6 @@ $ ->
 
   bg.listen "PORTRAIT_COUNTED", ( num )-> search.setPortraitMax num
 
-  #bg.listen "FIN_ARRANGE", -> search.showSearchBar()
-
   ###################
   # INIT
   ###################

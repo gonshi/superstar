@@ -92,8 +92,8 @@ class Search
       _targetPortrait.className += " selected"
 
       do (_$portrait, _targetPortrait)->
-        _dur = DUR * 4
-        _delay = 50 * i
+        _dur = DUR * 6
+        _delay = 0 * i
 
         if $( _targetPortrait ).parents( ".portrait_row" ).index() % 2 == 0
           _vec = -1
@@ -126,9 +126,9 @@ class Search
           top: _targetPortrait.getBoundingClientRect().top
         ,
           duration: _dur
+          delay: _delay
           easing: "easeInSine"
           queue: false
-
 
   setEpisode: ( episode )->
     @episode = episode
@@ -237,7 +237,7 @@ class Search
               when 0
                 @$episode.text "初めて泣いた。"
               when 1
-                @$episode.text "前に進んだ。"
+                @$episode.text "夢を見た。"
               when 2
                 @$episode.text "笑った。"
                 ticker.clear "TIMER_FROM_START"
@@ -249,6 +249,34 @@ class Search
                 @diffusePortrait _diffuse_num
                 @$result.find( ".info" ).velocity opacity: 0, DUR * 4
               , 3000
+
+              if i == 2
+                setTimeout =>
+                  @$result.velocity
+                    backgroundColorAlpha: 0
+                    borderColorAlpha: 0
+                  , DUR
+
+                  @$result.find( ".logo" ).velocity
+                    width: 580
+                    height: 300
+                  ,
+                    duration: DUR * 2
+                    delay: DUR * 2
+                    complete: =>
+                      @$result.find( ".logo" ).velocity opacity: 0
+                      ,
+                        duration: DUR * 2
+                        delay: DUR * 2
+                        complete: =>
+                          @$result_container.velocity opacity: [ 0, 1 ]
+                          , DUR * 2, =>
+                            @$result_container.hide()
+                            @$result.removeAttr "style"
+                            @$result.find( ".info" ).removeAttr "style"
+                            @$result.find( ".logo" ).removeAttr "style"
+                          @showSearchBar()
+                , 9000
 
   showResult: ( age, id )->
     _info = @origin_episode[ age ][ id ]
@@ -305,7 +333,7 @@ class Search
     @$search_container.velocity
       translateY: [ 0, -20 ]
       opacity: [ 1, 0 ]
-    , DUR * 2
+    , DUR * 4
 
   exec: ->
     ###########################
