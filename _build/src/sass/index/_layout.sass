@@ -93,3 +93,110 @@
         position: relative
         @extend %hoverEffect
         @extend %activeEffect
+
+  /* -------------------------
+   * illust
+  /* -------------------------
+
+  .illust-wright
+    $img: "illust/wright.png"
+    position: fixed
+    +trbl(30px, -1.2 * image-width($img), auto auto)
+    +image-size($img)
+
+  .illust-columbus
+    $img: "illust/egg.png"
+    position: fixed
+    +trbl(-0.6 * image-height($img), 0, auto, 0)
+    +sprite($img, 2)
+    margin: auto
+
+    &.break
+      +sprite-position($img, 2, 1)
+
+  .illust-oh
+    $img: "illust/ball.png"
+    position: fixed
+    +trbl(auto, auto, $footer_height + 42px, -1.2 * image-width($img))
+    +image-size($img)
+
+  .illust-newton
+    position: fixed
+    +trbl(auto, auto, $footer_height + 42px, 0)
+
+    &.fall
+      .illust-newton_chara_container
+        &:before,
+        &:after
+          top: 42px
+
+      .illust-newton_tree
+        &:before
+          top: 232px
+
+  .illust-newton_chara_container
+    $img: "illust/newton.png"
+    position: absolute
+    +trbl(auto, auto, 0, -1.2 * image-width($img))
+
+    @for $i from 1 through 3
+      &[data-id="#{$i}"]
+        .illust-newton_chara
+          +sprite-position($img, 3, ($i - 1))
+
+    &[data-id="3"]
+      &:before,
+      &:after
+        display: block
+        position: absolute
+        width: 5px
+        height: 5px
+        border-radius: 50%
+        background-color: #000
+        overflow: hidden
+        +transition(top, 0.5s, ease, 0s)
+        content: ""
+
+      &:before
+        +trbl(37px, auto, auto, 67px)
+
+      &:after
+        +trbl(37px, auto, auto, 77px)
+
+  .illust-newton_chara
+    $img: "illust/newton.png"
+    +sprite($img, 3)
+
+  .illust-newton_tree
+    display: none
+    position: absolute
+    +trbl(auto, auto, 0, 500px)
+    +image-size("illust/newton_tree.png")
+
+    &:before
+      display: block
+      position: absolute
+      +trbl(65px, auto, auto, 40px)
+      width: 16px
+      height: 16px
+      border-radius: 50%
+      background-color: #DA3F33
+      border: 4px solid #000
+      +transition(top, 0.5s, ease, 0s)
+      content: ""
+
+  .illust-beethoven
+    position: fixed
+    +trbl(300px, 30px, auto, auto)
+
+  .illust-beethoven_tone
+    position: absolute
+    @for $i from 1 through 4
+      &:nth-child(#{$i})
+        +trbl(0, -200px - 200px * $i, auto, auto)
+
+  .illust-zuckerberg
+    $img: "illust/zuckerberg.png"
+    position: fixed
+    +trbl(auto, -1.2 * image-width($img), $footer_height + 42px + 30px, auto)
+    +image-size($img)

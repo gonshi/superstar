@@ -82,11 +82,10 @@ class Bg extends EventDispatcher
           @img[ @img.length - 1 ].setAttribute "data-id", j
 
           if @loaded_src[ _src ]?
-            @img[ @img.length - 1 ].src = "#{ _src }?_=#{ @loaded_src[ _src ] }"
+            @img[ @img.length - 1 ].src = "#{ _src }"
           else
-            _date = Date.now()
-            @img[ @img.length - 1 ].src = "#{ _src }?_=#{ _date }"
-            @loaded_src[ _src ] = _date
+            @img[ @img.length - 1 ].src = "#{ _src }"
+            @loaded_src[ _src ] = Date.now()
 
           @img[ @img.length - 1 ].className +=
             " portrait_pic_#{ @img.length - 1 }"

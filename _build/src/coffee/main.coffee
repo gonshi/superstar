@@ -46,6 +46,7 @@ $ ->
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
+  window.NOT_YAHOO = true if location.search.match "not_yahoo"
   is_intro = false
 
   ########################
@@ -104,7 +105,7 @@ $ ->
   # INIT
   ###################
 
-  if location.search == "?skip"
+  if location.search.match "skip"
     window.skip = true
     window.DUR = 10
   else
