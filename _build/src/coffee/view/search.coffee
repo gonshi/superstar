@@ -41,6 +41,9 @@ class Search extends EventDispatcher
     @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
     @win_width = null
 
+    # illust
+    @$illust_container = $(".illust_container")
+
     # sound
     @roulette_sound = new Audio()
     @roulette_sound.src = "audio/roulette.mp3"
@@ -55,7 +58,75 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
-  diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
+    setTimeout ( => @animIllust "zuckerberg" ), 6000
+
+  animIllust: (name)-> # イラストによるアニメーション発動
+    window.DUR = 500
+    _$illust = @$illust_container.find(".illust-#{ name }")
+
+    switch name
+      when "wright"
+        _$illust.velocity
+          translateX: [-@$win.width() - 1000, 0]
+          translateY: [300, 0]
+        , DUR * 7, "easeInSine"
+      when "columbus"
+        _$illust.removeClass "break".velocity
+          translateY: [@$win.height() - @$year_container.height(), 0]
+        , DUR * 2, "easeOutSine"
+        setTimeout =>
+          _$illust
+          css(translateY: @$win.height() - @$year_container.height() - 20).
+          addClass "break"
+        , DUR * 1.8
+      when "oh"
+        _$illust.velocity
+          translateX: [@$win.width() + 1000, 0]
+          translateY: [-@$win.height() + @$year_container.height(), 0]
+          rotateZ: [-720, 0]
+        , DUR * 4, "easeOutSine"
+      when "newton"
+        _$illust.removeClass "fall"
+        _$illust.find(".illust-newton_tree").show()
+
+        _id = 1
+        _interval = setInterval ->
+          if _id < 5
+            _$illust.find(".illust-newton_chara_container").
+            attr("data-id": _id % 2 + 1).css left: -50 + 100 * _id
+          else if _id == 5
+            _$illust.find(".illust-newton_chara_container").attr("data-id": 3)
+          if _id == 7
+            clearInterval _interval
+            _$illust.addClass "fall"
+
+          _id += 1
+        , 400
+      when "beethoven"
+        for i in [0...4]
+          _$illust.find( "img" ).eq(i).velocity
+            translateX: [-@$win.width() - 1000, 0]
+          ,
+            queue: false
+            duration: DUR * 12
+            easing: "linear"
+
+          _$illust.find( ".illust-beethoven_tone" ).eq(i).velocity
+            translateY: 50 + Math.random() * 150
+          ,
+            duration: DUR + Math.random() * DUR * 2
+            loop: true
+            easing: "linear"
+
+        setTimeout ->
+          for i in [0...4]
+            _$illust.find( ".illust-beethoven_tone" ).eq(i).
+            velocity "stop"
+        , DUR * 12
+      when "zuckerberg"
+        _$illust.velocity translateX: [-600, 0], DUR
+
+   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _result_rect = @$result.get( 0 ).getBoundingClientRect()
 
     _portrait_row_width =
@@ -239,7 +310,7 @@ class Search extends EventDispatcher
         else
           @$age_num.text _age
 
-    _wait_span = if skip then 0 else 8000
+    _wait_span = if skip then 2000 else 8000
 
     ticker.listen "TIMER_FROM_START", ( t )=>
       for i in [ 0...3 ]
@@ -362,22 +433,22 @@ class Search extends EventDispatcher
           @roulette_sound.currentTime = 0
 
           if !NOT_YAHOO
-              setTimeout => # Yahoo! 仕様 FINALE表示
-                return if skip
-                @$result.velocity
-                  width: 720
-                  height: 450
+            setTimeout => # Yahoo! 仕様 FINALE表示
+              return if skip
+              @$result.velocity
+                width: 720
+                height: 450
+              , DUR, =>
+                @$result.find( ".info, .portrait, .logo" ).velocity
+                  opacity: 0
                 , DUR, =>
-                  @$result.find( ".info, .portrait, .logo" ).velocity
-                    opacity: 0
-                  , DUR, =>
-                    @$result.find( ".info, .portrait, .logo" ).hide()
-                    @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
-                      setTimeout =>
-                        @$result.find( ".yahoo-msg-2" ).addClass "underline"
-                      , DUR * 2
-                    , DUR
-              , DUR * 10
+                  @$result.find( ".info, .portrait, .logo" ).hide()
+                  @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
+                    setTimeout =>
+                      @$result.find( ".yahoo-msg-2" ).addClass "underline"
+                    , DUR * 2
+                  , DUR
+            , DUR * 10
         else
           @$age_num.text _age
 
