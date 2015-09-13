@@ -166,6 +166,7 @@ class Search extends EventDispatcher
       if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX / 3 )
         # 読み込み終えたことをチェックする。tickerのTIMER_FROM_STARTで
         # この値を監視し、trueであれば(画像用意が完了していれば)diffuseイベントを開始させる
+
         @portrait_loaded[ 0 ] = true
       else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX * 2 / 3 )
         @portrait_loaded[ 1 ] = true
@@ -360,22 +361,23 @@ class Search extends EventDispatcher
           @roulette_sound.pause()
           @roulette_sound.currentTime = 0
 
-          setTimeout => # Yahoo! 仕様 FINALE表示
-            return if skip
-            @$result.velocity
-              width: 720
-              height: 450
-            , DUR, =>
-              @$result.find( ".info, .portrait, .logo" ).velocity
-                opacity: 0
-              , DUR, =>
-                @$result.find( ".info, .portrait, .logo" ).hide()
-                @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
-                  setTimeout =>
-                    @$result.find( ".yahoo-msg-2" ).addClass "underline"
-                  , DUR * 2
-                , DUR
-          , DUR * 10
+          if !NOT_YAHOO
+              setTimeout => # Yahoo! 仕様 FINALE表示
+                return if skip
+                @$result.velocity
+                  width: 720
+                  height: 450
+                , DUR, =>
+                  @$result.find( ".info, .portrait, .logo" ).velocity
+                    opacity: 0
+                  , DUR, =>
+                    @$result.find( ".info, .portrait, .logo" ).hide()
+                    @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
+                      setTimeout =>
+                        @$result.find( ".yahoo-msg-2" ).addClass "underline"
+                      , DUR * 2
+                    , DUR
+              , DUR * 10
         else
           @$age_num.text _age
 
@@ -383,7 +385,7 @@ class Search extends EventDispatcher
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
   closeResult: ->
-    return # Yahoo!仕様, 1度きりしか見られないようにする？
+    return if !NOT_YAHOO # Yahoo!仕様, 1度きりしか見られないようにする
     @close_sound.currentTime = 0
     @close_sound.play()
 
