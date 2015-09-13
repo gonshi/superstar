@@ -58,8 +58,6 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
-    setTimeout ( => @animIllust "zuckerberg" ), 6000
-
   animIllust: (name)-> # イラストによるアニメーション発動
     window.DUR = 500
     _$illust = @$illust_container.find(".illust-#{ name }")
