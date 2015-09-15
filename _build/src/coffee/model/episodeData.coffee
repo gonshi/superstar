@@ -16,7 +16,7 @@ class EpisodeData extends EventDispatcher
     ########################
     # EVENT LISTENER
     ########################
-    
+
     window.gdata = {}
     window.gdata.io = {}
     window.gdata.io.handleScriptLoaded = ( response )=>
