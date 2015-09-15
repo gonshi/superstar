@@ -43,6 +43,7 @@ class Search extends EventDispatcher
 
     # illust
     @$illust_container = $(".illust_container")
+
     @ILLUST_NAME =
       wright: "ライト兄弟"
       columbus: "コロンブス"
@@ -50,6 +51,9 @@ class Search extends EventDispatcher
       newton: "ニュートン"
       beethoven: "ベートーベン"
       zuckerberg: "マーク・ザッカーバーグ"
+
+    @ILLUST_NAME_ARR = []
+    @ILLUST_NAME_ARR.push i for i of @ILLUST_NAME
 
     # sound
     @roulette_sound = new Audio()
@@ -65,63 +69,69 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
-    setTimeout ( => @animIllust "columbus" ), 6000
-
   animIllust: (name)-> # イラストによるアニメーション発動
+    for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
+      if @ILLUST_NAME_ARR[ i ] == name
+        @ILLUST_NAME_ARR.splice i, 1
+        break
+
     window.DUR = 500 if skip
-    _$illust = @$illust_container.find(".illust-#{ name }")
+    @$anim_illust = @$illust_container.find(".illust-#{ name }")
 
     switch name
       when "wright"
-        _$illust.velocity
+        @$anim_illust.show().velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
         , DUR * 7, "easeInSine", => @showResultByName name
       when "columbus"
-        _$illust.removeClass( "break" ).velocity
+        @$anim_illust.show().removeClass( "break" ).velocity
           translateY: [@$win.height() - @$year_container.height() + 80, 0]
         , DUR * 2, "easeInCubic", =>
-          _$illust.
+          @$anim_illust.
           css(translateY: @$win.height() - @$year_container.height() + 60).
           addClass "break"
 
         setTimeout ( => @showResultByName name ), DUR * 4
 
       when "oh"
-        _$illust.velocity
+        @$anim_illust.show().velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
           rotateZ: [-720, 0]
         , DUR * 4, "easeOutSine", => @showResultByName name
       when "newton"
-        _$illust.removeClass "fall"
-        _$illust.find(".illust-newton_tree").show()
+        @$anim_illust.show().removeClass "fall"
+        @$anim_illust.find(".illust-newton_tree").show()
 
         _id = 1
         _interval = setInterval =>
           if _id < 5
-            _$illust.find(".illust-newton_chara_container").
+            @$anim_illust.find(".illust-newton_chara_container").
             attr("data-id": _id % 2 + 1).css left: -50 + 100 * _id
           else if _id == 5
-            _$illust.find(".illust-newton_chara_container").attr("data-id": 3)
+            @$anim_illust.find(".illust-newton_chara_container").
+            attr "data-id": 3
           if _id == 7
             clearInterval _interval
-            _$illust.addClass "fall"
+            @$anim_illust.addClass "fall"
 
             setTimeout ( => @showResultByName name ), DUR * 4
 
           _id += 1
         , 400
       when "beethoven"
+        @$anim_illust.show()
+
         for i in [0...4]
-          _$illust.find( "img" ).eq(i).velocity
+          @$anim_illust.find( "img" ).eq(i).velocity
             translateX: [-@$win.width() - 1000, 0]
           ,
             queue: false
             duration: DUR * 12
             easing: "linear"
 
-          _$illust.find( ".illust-beethoven_tone" ).eq(i).velocity
+          @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).velocity
             translateY: 50 + Math.random() * 150
           ,
             duration: DUR + Math.random() * DUR * 2
@@ -130,13 +140,14 @@ class Search extends EventDispatcher
 
         setTimeout =>
           for i in [0...4]
-            _$illust.find( ".illust-beethoven_tone" ).eq(i).
+            @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).
             velocity "stop"
 
           @showResultByName name
         , DUR * 12
       when "zuckerberg"
-        _$illust.velocity translateX: [-600, 0], DUR, => @showResultByName name
+        @$anim_illust.show().velocity translateX: [-600, 0]
+        , DUR, => @showResultByName name
 
    diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _result_rect = @$result.get( 0 ).getBoundingClientRect()
@@ -393,6 +404,15 @@ class Search extends EventDispatcher
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
                             @dispatch "FIN_INTRO"
+
+                            # ランダムでアニメーションを流す
+                            @anim_timer = setTimeout =>
+                              @animIllust(
+                                @ILLUST_NAME_ARR[Math.floor(Math.random() *
+                                @ILLUST_NAME_ARR.length)]
+                              )
+                            , Math.random() * 5000 + 5000
+
                           @showSearchBar()
                 , DUR * 18
 
@@ -402,8 +422,14 @@ class Search extends EventDispatcher
       for j in [0...@episode[i].length]
         if @episode[i][j].name == @ILLUST_NAME[ name ]
           @showResult i, j
+          return
 
   showResult: ( age, id )->
+    clearTimeout @anim_timer if @anim_timer?
+
+    # 既に表示中の場合はブロック
+    return if @$result_container.css( "display" ) == "block"
+
     _info = @origin_episode[ age ][ id ]
 
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
@@ -484,6 +510,16 @@ class Search extends EventDispatcher
 
     @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
       @$result_container.hide()
+
+      @$anim_illust.hide() if @$anim_illust?
+      # ランダムで次のアニメーションを流す
+      if @ILLUST_NAME_ARR.length > 0
+        @anim_timer = setTimeout =>
+          @animIllust(
+            @ILLUST_NAME_ARR[Math.floor(Math.random() *
+            @ILLUST_NAME_ARR.length)]
+          )
+        , Math.random() * 5000 + 5000
 
   setWinWidth: ( win_width )-> @win_width = win_width
 
