@@ -43,6 +43,13 @@ class Search extends EventDispatcher
 
     # illust
     @$illust_container = $(".illust_container")
+    @ILLUST_NAME =
+      wright: "ライト兄弟"
+      columbus: "コロンブス"
+      oh: "王貞治"
+      newton: "ニュートン"
+      beethoven: "ベートーベン"
+      zuckerberg: "マーク・ザッカーバーグ"
 
     # sound
     @roulette_sound = new Audio()
@@ -58,8 +65,10 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
+    setTimeout ( => @animIllust "columbus" ), 6000
+
   animIllust: (name)-> # イラストによるアニメーション発動
-    window.DUR = 500
+    window.DUR = 500 if skip
     _$illust = @$illust_container.find(".illust-#{ name }")
 
     switch name
@@ -67,28 +76,29 @@ class Search extends EventDispatcher
         _$illust.velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
-        , DUR * 7, "easeInSine"
+        , DUR * 7, "easeInSine", => @showResultByName name
       when "columbus"
-        _$illust.removeClass "break".velocity
-          translateY: [@$win.height() - @$year_container.height(), 0]
-        , DUR * 2, "easeOutSine"
-        setTimeout =>
-          _$illust
-          css(translateY: @$win.height() - @$year_container.height() - 20).
+        _$illust.removeClass( "break" ).velocity
+          translateY: [@$win.height() - @$year_container.height() + 80, 0]
+        , DUR * 2, "easeInCubic", =>
+          _$illust.
+          css(translateY: @$win.height() - @$year_container.height() + 60).
           addClass "break"
-        , DUR * 1.8
+
+        setTimeout ( => @showResultByName name ), DUR * 4
+
       when "oh"
         _$illust.velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
           rotateZ: [-720, 0]
-        , DUR * 4, "easeOutSine"
+        , DUR * 4, "easeOutSine", => @showResultByName name
       when "newton"
         _$illust.removeClass "fall"
         _$illust.find(".illust-newton_tree").show()
 
         _id = 1
-        _interval = setInterval ->
+        _interval = setInterval =>
           if _id < 5
             _$illust.find(".illust-newton_chara_container").
             attr("data-id": _id % 2 + 1).css left: -50 + 100 * _id
@@ -97,6 +107,8 @@ class Search extends EventDispatcher
           if _id == 7
             clearInterval _interval
             _$illust.addClass "fall"
+
+            setTimeout ( => @showResultByName name ), DUR * 4
 
           _id += 1
         , 400
@@ -116,13 +128,15 @@ class Search extends EventDispatcher
             loop: true
             easing: "linear"
 
-        setTimeout ->
+        setTimeout =>
           for i in [0...4]
             _$illust.find( ".illust-beethoven_tone" ).eq(i).
             velocity "stop"
+
+          @showResultByName name
         , DUR * 12
       when "zuckerberg"
-        _$illust.velocity translateX: [-600, 0], DUR
+        _$illust.velocity translateX: [-600, 0], DUR, => @showResultByName name
 
    diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _result_rect = @$result.get( 0 ).getBoundingClientRect()
@@ -325,6 +339,7 @@ class Search extends EventDispatcher
               _diffuse_num = Math.floor( @PORTRAIT_MAX * 1 / 3 )
 
             @portrait_loaded[ i ] = null # null は、そのフェーズが終了したことを表す
+
             @$age_num.text i
 
             switch i
@@ -380,6 +395,13 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
                           @showSearchBar()
                 , DUR * 18
+
+  showResultByName: ( name )->
+    # name の探索
+    for i of @episode
+      for j in [0...@episode[i].length]
+        if @episode[i][j].name == @ILLUST_NAME[ name ]
+          @showResult i, j
 
   showResult: ( age, id )->
     _info = @origin_episode[ age ][ id ]
