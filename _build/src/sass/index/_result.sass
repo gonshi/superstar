@@ -127,12 +127,16 @@
       @extend %hideText
 
     .social_container
+      display: none
       position: absolute
       +trbl(auto, auto, 35px, 35px)
 
     .social
       position: absolute
       width: 40px
+
+      @extend %hoverEffect
+      @extend %activeEffect
 
       img
         width: 100%

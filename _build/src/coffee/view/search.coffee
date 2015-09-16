@@ -20,6 +20,8 @@ class Search extends EventDispatcher
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age_container .num" )
     @$link = @$result.find( ".link" )
+    @$tweet_a = @$result.find( ".tweet a" )
+    @$facebook = @$result.find( ".facebook" )
 
     # year
     @$year_container = $( ".year_container" )
@@ -447,6 +449,7 @@ class Search extends EventDispatcher
                             @$result.find( ".info" ).removeAttr "style"
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
+                            @$result.find( ".social_container" ).show()
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
@@ -485,6 +488,16 @@ class Search extends EventDispatcher
     @$age_num.text "0"
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
+
+    # set social text
+    @$tweet_a.attr(
+      "href": "http://twitter.com/share?url=#{@$tweet_a.attr "data-url"}" +
+      "&text=#{ encodeURIComponent( "#{ @$result.find( ".info" ).text().
+      replace( /\n| |　/g, "" ) } - #{ @$tweet_a.attr "data-title" }" ) }"
+    )
+
+    @$facebook.attr "data-description": @$result.find( ".info" ).text().
+    replace( /\n| |　/g, "" )
 
     # set layout
     if _info.name.length > 11
