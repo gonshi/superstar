@@ -70,6 +70,14 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
+    # illust SE
+    @oh_sound = new Audio()
+    @oh_sound.src = "audio/oh.mp3"
+    @beethoven_sound = new Audio()
+    @beethoven_sound.src = "audio/beethoven.mp3"
+    @wright_sound = new Audio()
+    @wright_sound.src = "audio/wright.mp3"
+
   animIllust: (name)-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
       if @ILLUST_NAME_ARR[ i ] == name
@@ -81,6 +89,7 @@ class Search extends EventDispatcher
 
     switch name
       when "wright"
+        @wright_sound.play()
         @$anim_illust.show().velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
@@ -96,6 +105,7 @@ class Search extends EventDispatcher
         setTimeout ( => @showResultByName name ), DUR * 4
 
       when "oh"
+        @oh_sound.play()
         @$anim_illust.show().velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
@@ -122,6 +132,9 @@ class Search extends EventDispatcher
           _id += 1
         , 400
       when "beethoven"
+        @beethoven_sound.volume = 0
+        $(@beethoven_sound).animate volume: 1, DUR * 4
+        @beethoven_sound.play()
         @$anim_illust.show()
 
         for i in [0...4]
@@ -131,6 +144,9 @@ class Search extends EventDispatcher
             queue: false
             duration: DUR * 12
             easing: "linear"
+            complete: =>
+              $(@beethoven_sound).animate volume: 0, DUR * 4, =>
+                @beethoven_sound.stop()
 
           @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).velocity
             translateY: 50 + Math.random() * 150
@@ -441,6 +457,8 @@ class Search extends EventDispatcher
                               )
                             , Math.random() * 5000 + 5000
 
+                            @fin_intro = true
+
                           @showSearchBar()
                 , DUR * 18
 
@@ -464,7 +482,7 @@ class Search extends EventDispatcher
 
     @$name.text _info.name
     @$episode.html _info.episode
-    @$age_num.text ""
+    @$age_num.text "0"
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
@@ -531,6 +549,8 @@ class Search extends EventDispatcher
 
   closeResult: ->
     return if !NOT_YAHOO # Yahoo!仕様, 1度きりしか見られないようにする
+    return unless @fin_intro?
+
     @close_sound.currentTime = 0
     @close_sound.play()
 

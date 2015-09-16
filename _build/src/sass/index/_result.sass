@@ -125,3 +125,21 @@
       +image-size("common/logo.png", true, 2)
       +bg("common/logo.svg")
       @extend %hideText
+
+    .social_container
+      position: absolute
+      +trbl(auto, auto, 35px, 35px)
+
+    .social
+      position: absolute
+      width: 40px
+
+      img
+        width: 100%
+
+    .tweet
+      +trbl(auto, auto, 0, 0)
+
+    .facebook
+      +trbl(auto, auto, 0, 50px)
+      cursor: pointer
