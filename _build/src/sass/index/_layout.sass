@@ -64,6 +64,10 @@
     box-shadow: 0 0 6px 0px #333
     opacity: 0
 
+    #{$is_sp}
+      position: fixed
+      width: 560px
+
     .search
       float: left
       width: $search_width - image-width("common/search.png")
@@ -73,6 +77,9 @@
       font-size: 18px
       color: #777
       border: solid 3px #000
+
+      #{$is_sp}
+        width: 560px - image-width("common/search.png")
 
       &.on
         font-size: 28px
