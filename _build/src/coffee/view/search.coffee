@@ -325,6 +325,14 @@ class Search extends EventDispatcher
     @open_sound.currentTime = 0
     @open_sound.play()
 
+    # 全角・半角変換
+    age = age.replace( /[Ａ-Ｚａ-ｚ０-９]/g,( s )->
+      return String.fromCharCode( s.charCodeAt(0) - 0xFEE0 )
+    )
+
+    # 文字列排除
+    age = parseInt age
+
     @search_interval = setInterval => # 連打防止
       if @episode?
         clearInterval @search_interval
@@ -524,6 +532,7 @@ class Search extends EventDispatcher
           ticker.clear "AGE_COUNTUP"
           @roulette_sound.pause()
           @roulette_sound.currentTime = 0
+          @$age_num.text age
 
           if !NOT_YAHOO
             setTimeout => # Yahoo! 仕様 FINALE表示
@@ -586,9 +595,7 @@ class Search extends EventDispatcher
     ###########################
 
     @$search.one "click", =>
-      @$search.attr type: "number"
-      .val( "" )
-      .addClass "on"
+      @$search.val( "" ).addClass "on"
 
     @$result_container.on "click", ( e )=>
       return if @$result_container.hasClass "is_animating"
