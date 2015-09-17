@@ -485,7 +485,7 @@ class Search extends EventDispatcher
 
     @$name.text _info.name
     @$episode.html _info.episode
-    @$age_num.text "0"
+    @$age_num.text age
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
@@ -498,6 +498,8 @@ class Search extends EventDispatcher
 
     @$facebook.attr "data-description": @$result.find( ".info" ).text().
     replace( /\n| |　/g, "" )
+
+    @$age_num.text "0"
 
     # set layout
     if _info.name.length > 11
