@@ -50,6 +50,19 @@
         +trbl(0, auto, auto, 0)
         opacity: 0
 
+    .portrait_txt
+      opacity: 0
+      text-align: center
+      margin-top: 5px
+      font-size: 12px
+
+      #{$is_sp}
+        font-size: 14px
+
+    .portrait_title
+      &:before
+        content: " / "
+
     .info
       margin: 0 auto
       text-align: center
@@ -58,32 +71,6 @@
 
       #{$is_sp}
         font-size: 28px
-
-    .yahoo-msg
-      display: none
-      text-align: center
-      opacity: 0
-
-    .yahoo-msg-1
-      margin-top: 30px
-
-    .yahoo-msg-2
-      position: relative
-      margin-top: 60px
-
-      &:after
-        position: absolute
-        +trbl(auto, auto, -12px, 50px)
-        width: 0
-        height: 6px
-        background-color: #000
-        border-radius: 4px
-        +transition(width, 2s, ease 0s)
-        content: ""
-
-      &.underline
-        &:after
-          width: image-width("common/yahoo-msg-2.png") + 20px
 
     .name_container
       line-height: 1.4

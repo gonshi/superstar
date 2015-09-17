@@ -19,6 +19,8 @@ class Search extends EventDispatcher
     @$name = @$result.find( ".name" )
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age_container .num" )
+    @$portrait_name = @$result.find( ".portrait_name" )
+    @$portrait_title = @$result.find( ".portrait_title" )
     @$link = @$result.find( ".link" )
     @$tweet_a = @$result.find( ".tweet a" )
     @$facebook = @$result.find( ".facebook" )
@@ -39,7 +41,7 @@ class Search extends EventDispatcher
     # values
     @portrait_loaded = []
     @cur_year_left = 0
-    @RESULT_PADDING_HEIGHT = if isSp then 360 else 247
+    @RESULT_PADDING_HEIGHT = if isSp then 390 else 269
     @ESCAPE_KEYCODE = 27
     @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
     @win_width = null
@@ -48,7 +50,7 @@ class Search extends EventDispatcher
     @$illust_container = $(".illust_container")
 
     @ILLUST_NAME =
-      wright: "ライト兄弟"
+      wright: "ウィルバー・ライト"
       columbus: "コロンブス"
       oh: "王貞治"
       newton: "ニュートン"
@@ -444,6 +446,7 @@ class Search extends EventDispatcher
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
                             @$result.find( ".social_container" ).show()
+                            @$result.find( ".portrait_txt" ).css opacity: 1
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
@@ -478,8 +481,10 @@ class Search extends EventDispatcher
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
     @$name.text _info.name
+    @$portrait_name.text _info.name
     @$episode.html _info.episode
     @$age_num.text age
+    @$portrait_title.text _info.title
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
@@ -533,24 +538,6 @@ class Search extends EventDispatcher
           @roulette_sound.pause()
           @roulette_sound.currentTime = 0
           @$age_num.text age
-
-          if !NOT_YAHOO
-            setTimeout => # Yahoo! 仕様 FINALE表示
-              return if skip
-              @$result.velocity
-                width: 720
-                height: 450
-              , DUR, =>
-                @$result.find( ".info, .portrait, .logo" ).velocity
-                  opacity: 0
-                , DUR, =>
-                  @$result.find( ".info, .portrait, .logo" ).hide()
-                  @$result.find( ".yahoo-msg" ).show().velocity opacity: 1, =>
-                    setTimeout =>
-                      @$result.find( ".yahoo-msg-2" ).addClass "underline"
-                    , DUR * 2
-                  , DUR
-            , DUR * 10
         else
           @$age_num.text _age
 
@@ -558,7 +545,6 @@ class Search extends EventDispatcher
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
   closeResult: ->
-    return if !NOT_YAHOO # Yahoo!仕様, 1度きりしか見られないようにする
     return unless @fin_intro?
 
     @close_sound.currentTime = 0
