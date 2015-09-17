@@ -449,7 +449,7 @@ class Search extends EventDispatcher
                             @$result.find( ".info" ).removeAttr "style"
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
-                            #@$result.find( ".social_container" ).show()
+                            @$result.find( ".social_container" ).show()
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
