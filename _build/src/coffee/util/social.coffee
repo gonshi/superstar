@@ -17,9 +17,9 @@ class Social
       js = document.createElement "script"
       js.id = "facebook-jssdk"
       js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&" +
-              "appId=1548831858693621&version=v2.0"
+              "appId=959877374073274&version=v2.0"
       fjs.parentNode.insertBefore js, fjs
-    
+
     # twitter
     if _type.tweet?
       _dom = document.querySelectorAll( ".tweet" )
@@ -91,16 +91,49 @@ class Social
         js = document.createElement "script"
         js.id = "facebook-jssdk"
         js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&" +
-                "appId=1548831858693621&version=v2.0"
+                "appId=959877374073274&version=v2.0"
         fjs.parentNode.insertBefore js, fjs
 
-    ###
     # fb-share
-    $( document ).on "click", ".fb-share button", ( e )->
-      window.FB.ui
-        method: "share"
-        href: window.location.href
-    ###
+    $( ".facebook" ).on "click", ( e )->
+      FB.ui
+        display: "popup"
+        method: "feed"
+        link: $(e.target).attr "data-url"
+        name: $(e.target).attr "data-name"
+        picture: $(e.target).attr "data-picture"
+        description: $(e.target).attr "data-description"
+
+    # tweet
+    $( ".tweet a" ).on "click", ( e ) ->
+      e.preventDefault()
+
+      if window.screenLeft?
+        _dualScreenLeft = window.screenLeft
+        _dualScreenTop = window.screenTop
+      else
+        _dualScreenLeft = window.screen.left
+        _dualScreenTop = window.screen.top
+
+      if innerWidth?
+        _windowWidth = window.innerWidth
+        _windowHeight = window.innerHeight
+      else if document.documentElement?.clientWidth?
+        _windowWidth = document.documentElement.clientWidth
+        _windowWidth = document.documentElement.clientHeight
+      else
+        _windowWidth = window.screen.width
+        _windowWidth = window.screen.height
+
+      _popupWidth = 650
+      _popupHeight = 450
+
+      _left = ((_windowWidth / 2) - (_popupWidth / 2)) + _dualScreenLeft
+      _top = ((_windowHeight / 2) - (_popupHeight / 2)) + _dualScreenTop
+
+      window.open $(e.currentTarget).attr("href"), "twitter",
+                  "width=#{_popupWidth}, height=#{_popupHeight}, " +
+                  "top=#{_top}, left=#{_left}"
 
   callback: ->
     # twitter

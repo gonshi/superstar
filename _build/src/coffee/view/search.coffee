@@ -20,6 +20,8 @@ class Search extends EventDispatcher
     @$episode = @$result.find( ".episode" )
     @$age_num = @$result.find( ".age_container .num" )
     @$link = @$result.find( ".link" )
+    @$tweet_a = @$result.find( ".tweet a" )
+    @$facebook = @$result.find( ".facebook" )
 
     # year
     @$year_container = $( ".year_container" )
@@ -32,11 +34,12 @@ class Search extends EventDispatcher
     # portrait container (introのアニメーションのため、
     # 背景のportraitにもアクセスできるようにする)
     @$portrait_container = $( ".portrait_container" )
+    @is_diffusing = false
 
     # values
     @portrait_loaded = []
     @cur_year_left = 0
-    @RESULT_PADDING_HEIGHT = 247
+    @RESULT_PADDING_HEIGHT = if isSp then 360 else 247
     @ESCAPE_KEYCODE = 27
     @WIKI_LINK_ORIGIN = "https://ja.wikipedia.org/wiki/"
     @win_width = null
@@ -69,6 +72,14 @@ class Search extends EventDispatcher
     # loaded portrait count (for intro)
     @loaded_portrait_num = 0
 
+    # illust SE
+    @oh_sound = new Audio()
+    @oh_sound.src = "audio/oh.mp3"
+    @beethoven_sound = new Audio()
+    @beethoven_sound.src = "audio/beethoven.mp3"
+    @wright_sound = new Audio()
+    @wright_sound.src = "audio/wright.mp3"
+
   animIllust: (name)-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
       if @ILLUST_NAME_ARR[ i ] == name
@@ -80,6 +91,7 @@ class Search extends EventDispatcher
 
     switch name
       when "wright"
+        @wright_sound.play()
         @$anim_illust.show().velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
@@ -95,6 +107,7 @@ class Search extends EventDispatcher
         setTimeout ( => @showResultByName name ), DUR * 4
 
       when "oh"
+        @oh_sound.play()
         @$anim_illust.show().velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
@@ -121,6 +134,9 @@ class Search extends EventDispatcher
           _id += 1
         , 400
       when "beethoven"
+        @beethoven_sound.volume = 0
+        $(@beethoven_sound).animate volume: 1, DUR * 4
+        @beethoven_sound.play()
         @$anim_illust.show()
 
         for i in [0...4]
@@ -130,6 +146,9 @@ class Search extends EventDispatcher
             queue: false
             duration: DUR * 12
             easing: "linear"
+            complete: =>
+              $(@beethoven_sound).animate volume: 0, DUR * 4, =>
+                @beethoven_sound.stop()
 
           @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).velocity
             translateY: 50 + Math.random() * 150
@@ -149,7 +168,7 @@ class Search extends EventDispatcher
         @$anim_illust.show().velocity translateX: [-600, 0]
         , DUR, => @showResultByName name
 
-   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
+  diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _result_rect = @$result.get( 0 ).getBoundingClientRect()
 
     _portrait_row_width =
@@ -185,7 +204,7 @@ class Search extends EventDispatcher
 
       _targetPortrait.className += " selected" # 選ばれたものにはチェックをつける
 
-      do (_$portrait, _targetPortrait)->
+      do (_$portrait, _targetPortrait)=>
         if skip
           _dur = 0
           _delay = 0
@@ -214,33 +233,50 @@ class Search extends EventDispatcher
         else
           _target_opacity = 0.2
 
-        # モーダル上の位置から、背景側の
-        # 同一ポートレートの位置までアニメーションさせる
-        _$portrait.css
-          position: "fixed"
-          top: _$portrait.get( 0 ).getBoundingClientRect().top
-          left: _$portrait.get( 0 ).getBoundingClientRect().left
-          width: _$portrait.width()
-          height: _$portrait.height()
-        .velocity # 横位置
-          left: _target_left
-          width: _targetPortrait.offsetWidth
-          height: _targetPortrait.offsetHeight
-          opacity: [ _target_opacity, 0 ]
-        ,
-          duration: _dur
-          delay: _delay
-          easing: "easeOutSine"
-          complete: ->
-            _$portrait.remove()
-            _targetPortrait.className += " show"
+        if isSp
+          _$portrait.css
+            position: "fixed"
+            top: _target_top
+            left: _target_left
+            width: _targetPortrait.offsetWidth
+            height: _targetPortrait.offsetHeight
 
-        _$portrait.velocity top: _target_top # 縦位置
-        ,
-          duration: _dur
-          delay: _delay
-          easing: "easeInSine"
-          queue: false
+          $(_targetPortrait).velocity
+            opacity: [ 1, 0 ]
+          , _dur, =>
+            _$portrait.remove()
+            $(_targetPortrait).removeAttr "style"
+            _targetPortrait.className += " show"
+            @is_diffusing = false
+        else
+          # モーダル上の位置から、背景側の
+          # 同一ポートレートの位置までアニメーションさせる
+          _$portrait.css
+            position: "fixed"
+            top: _$portrait.get( 0 ).getBoundingClientRect().top
+            left: _$portrait.get( 0 ).getBoundingClientRect().left
+            width: _$portrait.width()
+            height: _$portrait.height()
+          .velocity # 横位置
+            left: _target_left
+            width: _targetPortrait.offsetWidth
+            height: _targetPortrait.offsetHeight
+            opacity: [ _target_opacity, 0 ]
+          ,
+            duration: _dur
+            delay: _delay
+            easing: "easeOutSine"
+            complete: =>
+              _$portrait.remove()
+              _targetPortrait.className += " show"
+              @is_diffusing = false
+
+          _$portrait.velocity top: _target_top # 縦位置
+          ,
+            duration: _dur
+            delay: _delay
+            easing: "easeInSine"
+            queue: false
 
   setEpisode: ( episode )->
     @episode = episode
@@ -339,7 +375,8 @@ class Search extends EventDispatcher
       for i in [ 0...3 ]
         if t > _wait_span * i  # _wait_span(ms) 置きにdiffuseイベントを発生させる
           if @portrait_loaded[ i ] # ロードが完了したタイミングで
-            if i == 1 && @portrait_loaded[ 0 ] != null ||
+            if @is_diffusing ||
+               i == 1 && @portrait_loaded[ 0 ] != null ||
                i == 2 && @portrait_loaded[ 1 ] != null
               return # 1つ前のフェーズが終わっていなければ開始しない
 
@@ -368,6 +405,7 @@ class Search extends EventDispatcher
 
             @$result.find( ".info" ).velocity opacity: 1, DUR * 4
 
+            @is_diffusing = true
             do ( i )=>
               setTimeout =>
                 @diffusePortrait _diffuse_num
@@ -384,9 +422,17 @@ class Search extends EventDispatcher
                     borderColorAlpha: 0
                   , DUR
 
+                  if isSp
+                    _width = 490
+                    _bottom = 150
+                  else
+                    _width = 580
+                    _bottom = 35
+
                   @$result.find( ".logo" ).velocity
-                    width: 580
-                    height: 300
+                    width: _width
+                    height: _width * 300 / 580
+                    bottom: _bottom
                   ,
                     duration: DUR * 2
                     delay: DUR * 2
@@ -403,6 +449,7 @@ class Search extends EventDispatcher
                             @$result.find( ".info" ).removeAttr "style"
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
+                            @$result.find( ".social_container" ).show()
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
@@ -412,6 +459,8 @@ class Search extends EventDispatcher
                                 @ILLUST_NAME_ARR.length)]
                               )
                             , Math.random() * 5000 + 5000
+
+                            @fin_intro = true
 
                           @showSearchBar()
                 , DUR * 18
@@ -436,9 +485,19 @@ class Search extends EventDispatcher
 
     @$name.text _info.name
     @$episode.html _info.episode
-    @$age_num.text ""
+    @$age_num.text "0"
     @$link.find( "a" ).attr
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
+
+    # set social text
+    @$tweet_a.attr(
+      "href": "http://twitter.com/share?url=#{@$tweet_a.attr "data-url"}" +
+      "&text=#{ encodeURIComponent( "#{ @$result.find( ".info" ).text().
+      replace( /\n| |　/g, "" ) } - #{ @$tweet_a.attr "data-title" }" ) }"
+    )
+
+    @$facebook.attr "data-description": @$result.find( ".info" ).text().
+    replace( /\n| |　/g, "" )
 
     # set layout
     if _info.name.length > 11
@@ -503,6 +562,8 @@ class Search extends EventDispatcher
 
   closeResult: ->
     return if !NOT_YAHOO # Yahoo!仕様, 1度きりしか見られないようにする
+    return unless @fin_intro?
+
     @close_sound.currentTime = 0
     @close_sound.play()
 
