@@ -46,8 +46,7 @@ $ ->
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
-  window.NOT_YAHOO = if location.search.match "not_yahoo" then true else false
-  window.NOT_YAHOO = true if isSp
+  window.NOT_YAHOO = true
   is_intro = false
 
   ########################
