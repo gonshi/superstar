@@ -46,7 +46,7 @@ $ ->
   $password = $( ".password_container" )
   $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
-  window.NOT_YAHOO = true
+  window.NOT_YAHOO = false
   is_intro = false
 
   ########################
