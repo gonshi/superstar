@@ -168,6 +168,8 @@ class Search extends EventDispatcher
         , DUR, => @showResultByName name
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
+    _diffused_num = 0
+
     _result_rect = @$result.get( 0 ).getBoundingClientRect()
 
     _portrait_row_width =
@@ -263,7 +265,7 @@ class Search extends EventDispatcher
             complete: =>
               _$portrait.remove()
               _targetPortrait.className += " show"
-              @is_diffusing = false
+              @is_diffusing = false if ++_diffused_num == diffuse_num
 
           _$portrait.velocity top: _target_top # 縦位置
           ,
