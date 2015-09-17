@@ -107,7 +107,6 @@ $ ->
 
   if location.search.match "skip"
     window.skip = true
-    window.DUR = 10
   else
     window.skip = false
 

@@ -8,10 +8,6 @@ class Social
 
     # facebook
     if _type.fb?
-      _dom = document.querySelectorAll( ".fb-like" )
-      for i in [ 0..._dom.length ]
-        _dom[ i ].style.opacity = 1
-
       fjs = document.getElementsByTagName( "script" )[ 0 ]
       return if document.getElementById "facebook-jssdk"
       js = document.createElement "script"
@@ -22,10 +18,6 @@ class Social
 
     # twitter
     if _type.tweet?
-      _dom = document.querySelectorAll( ".tweet" )
-      for i in [ 0..._dom.length ]
-        _dom[ i ].style.opacity = 1
-
       window.twttr = (->
         fjs = document.getElementsByTagName( "script" )[ 0 ]
         return if document.getElementById "twitter-wjs"
@@ -44,10 +36,6 @@ class Social
 
     # hatena
     if _type.hatena?
-      _dom = document.querySelectorAll( ".hatena" )
-      for i in [ 0..._dom.length ]
-        _dom[ i ].style.opacity = 1
-
       j = document.createElement "script"
       j.type = "text/javascript"
       j.src = "https://b.st-hatena.com/js/bookmark_button.js"
@@ -58,10 +46,6 @@ class Social
 
     # pocket
     if _type.pocket?
-      _dom = document.querySelectorAll( ".pocket" )
-      for i in [ 0..._dom.length ]
-        _dom[ i ].style.opacity = 1
-
       if !document.getElementById "pocket-btn-js"
         j = document.createElement "script"
         j.id = "pocket-btn-js"
@@ -72,10 +56,6 @@ class Social
 
     # gplus
     if _type.gplus?
-      _dom = document.querySelectorAll( ".gplus" )
-      for i in [ 0..._dom.length ]
-        _dom[ i ].style.opacity = 1
-
       po = document.createElement "script"
       po.type = "text/javascript"
       po.async = true

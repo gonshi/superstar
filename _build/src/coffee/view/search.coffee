@@ -86,7 +86,6 @@ class Search extends EventDispatcher
         @ILLUST_NAME_ARR.splice i, 1
         break
 
-    window.DUR = 500 if skip
     @$anim_illust = @$illust_container.find(".illust-#{ name }")
 
     switch name
@@ -148,7 +147,7 @@ class Search extends EventDispatcher
             easing: "linear"
             complete: =>
               $(@beethoven_sound).animate volume: 0, DUR * 4, =>
-                @beethoven_sound.stop()
+                @beethoven_sound.pause()
 
           @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).velocity
             translateY: 50 + Math.random() * 150
@@ -174,39 +173,34 @@ class Search extends EventDispatcher
     _portrait_row_width =
       @$portrait_container.find( ".portrait_row" ).width()
 
+    _portrait_i_arr = []
+    for i in [ 0...@$portrait.find( "img" ).size() ]
+      _portrait_i_arr.push i
+
     for i in [ 0...diffuse_num ]
-      loop
-        if i == 0
-          _i = diffuse_num - 1
-        else
-          _i = Math.floor( Math.random() * @$portrait.find( "img" ).size() )
-        break unless @$portrait.find( "img" ).eq( _i ).hasClass "selected"
+      _portrait_i = Math.floor( Math.random() * _portrait_i_arr.length )
 
-      _$portrait = @$portrait.find( "img" ).eq _i
-      _$portrait.addClass "selected"
-      _portrait_id = _$portrait.attr( "data-id" )
+      _$portrait = @$portrait.find( "img" ).
+      eq _portrait_i_arr[ _portrait_i ]
 
-      loop # ランダムに、かつ未選択のターゲットportrait(背景側のportrait)を選ぶ
-        _rand = (
-          Math.floor(
-            Math.random() * @$portrait_container.
-            find( ".portrait_pic_#{ _portrait_id }" ).
-            size()
-          )
-        )
+      _portrait_id = _$portrait.attr "data-id"
 
-        _targetPortrait =
-          @$portrait_container.
-          find( ".portrait_pic_#{ _portrait_id }" ).
-          get _rand
+      _portrait_i_arr.splice _portrait_i, 1
 
-        break unless _targetPortrait.className.match "selected"
+      _bg_portrait_i = @$portrait_container.
+                       find( ".portrait_pic_#{ _portrait_id }.selected" ).
+                       size()
 
-      _targetPortrait.className += " selected" # 選ばれたものにはチェックをつける
+      _targetPortrait =
+        @$portrait_container.
+        find( ".portrait_pic_#{ _portrait_id }" ).
+        get _bg_portrait_i
+
+      _targetPortrait.className += " selected"
 
       do (_$portrait, _targetPortrait)=>
         if skip
-          _dur = 0
+          _dur = 10
           _delay = 0
         else
           _dur = DUR * 6
@@ -298,7 +292,7 @@ class Search extends EventDispatcher
         # この値を監視し、trueであれば(画像用意が完了していれば)diffuseイベントを開始させる
 
         @portrait_loaded[ 0 ] = true
-      else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX * 2 / 3 )
+      else if @loaded_portrait_num == Math.floor( @PORTRAIT_MAX / 3 ) * 2
         @portrait_loaded[ 1 ] = true
       else if @loaded_portrait_num == @PORTRAIT_MAX
         @portrait_loaded[ 2 ] = true
@@ -359,21 +353,11 @@ class Search extends EventDispatcher
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"
 
-      @roulette_sound.play()
-      ticker.listen "AGE_COUNTUP", ( t )=>
-        _age = Math.floor( t / 30 )
-        if _age > 0
-          ticker.clear "AGE_COUNTUP"
-          @roulette_sound.pause()
-          @roulette_sound.currentTime = 0
-        else
-          @$age_num.text _age
-
-    _wait_span = if skip then 2000 else 8000
-
     ticker.listen "TIMER_FROM_START", ( t )=>
+      _dur = if skip then 10 else DUR
+
       for i in [ 0...3 ]
-        if t > _wait_span * i  # _wait_span(ms) 置きにdiffuseイベントを発生させる
+        if t > _dur * 16 * i  # _wait_span(ms) 置きにdiffuseイベントを発生させる
           if @portrait_loaded[ i ] # ロードが完了したタイミングで
             if @is_diffusing ||
                i == 1 && @portrait_loaded[ 0 ] != null ||
@@ -403,7 +387,7 @@ class Search extends EventDispatcher
               height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
               opacity: 1
 
-            @$result.find( ".info" ).velocity opacity: 1, DUR * 4
+            @$result.find( ".info" ).velocity opacity: 1, _dur * 4
 
             @is_diffusing = true
             do ( i )=>
@@ -411,16 +395,16 @@ class Search extends EventDispatcher
                 @diffusePortrait _diffuse_num
                 @$result.find( ".info" ).velocity opacity: 0
                 ,
-                  duration: DUR * 4
-                  delay: DUR * 2
-              , DUR * 6
+                  duration: _dur * 4
+                  delay: _dur * 2
+              , _dur * 6
 
               if i == 2 # イントロ終了。本編への繋ぎ演出を行う。
                 setTimeout =>
                   @$result.velocity
                     backgroundColorAlpha: 0
                     borderColorAlpha: 0
-                  , DUR
+                  , _dur
 
                   if isSp
                     _width = 490
@@ -434,16 +418,16 @@ class Search extends EventDispatcher
                     height: _width * 300 / 580
                     bottom: _bottom
                   ,
-                    duration: DUR * 2
-                    delay: DUR * 2
+                    duration: _dur * 2
+                    delay: _dur * 2
                     complete: =>
                       @$result.find( ".logo" ).velocity opacity: 0
                       ,
-                        duration: DUR * 2
-                        delay: DUR * 6
+                        duration: _dur * 2
+                        delay: _dur * 6
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]
-                          , DUR * 2, =>
+                          , _dur * 2, =>
                             @$result_container.hide()
                             @$result.removeAttr "style"
                             @$result.find( ".info" ).removeAttr "style"
@@ -463,7 +447,7 @@ class Search extends EventDispatcher
                             @fin_intro = true
 
                           @showSearchBar()
-                , DUR * 18
+                , _dur * 18
 
   showResultByName: ( name )->
     # name の探索
@@ -616,6 +600,12 @@ class Search extends EventDispatcher
       @closeResult() if e.keyCode == @ESCAPE_KEYCODE
 
     @$enter.on "click", => @search @$search.val()
+
+    @$result_container.find( ".skip" ).one "click", =>
+      window.skip = true
+      @$result_container.find( ".skip" ).hide()
+      #@$result_container.css opacity: 0
+      #@$portrait.find( "img" ).css visibility: "hidden"
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
