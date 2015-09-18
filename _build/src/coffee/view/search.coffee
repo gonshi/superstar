@@ -445,7 +445,7 @@ class Search extends EventDispatcher
                         easing: EASE_IN_BACK
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]
-                          , _dur, =>
+                          , _dur * 3, =>
                             @$result_container.hide()
                             @$result.removeAttr "style"
                             @$result.find( ".info" ).removeAttr "style"
@@ -579,7 +579,7 @@ class Search extends EventDispatcher
     @$search_container.velocity
       translateY: [ 0, -20 ]
       opacity: [ 1, 0 ]
-    , DUR * 4
+    , DUR * 3
 
   exec: ->
     ###########################
