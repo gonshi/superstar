@@ -102,8 +102,19 @@ class Search extends EventDispatcher
           translateY: [@$win.height() - @$year_container.height() + 80, 0]
         , DUR * 2, "easeInCubic", =>
           @$anim_illust.
-          css(translateY: @$win.height() - @$year_container.height() + 60).
-          addClass "break"
+          addClass( "break" ).
+          velocity(
+            translateY: @$win.height() - @$year_container.height() + 60
+          , 30 ).
+          velocity(
+            translateY: @$win.height() - @$year_container.height() + 57
+          , 30 ).
+          velocity(
+            translateY: @$win.height() - @$year_container.height() + 63
+          , 10 ).
+          velocity(
+            translateY: @$win.height() - @$year_container.height() + 60
+          , 10 )
 
         setTimeout ( => @showResultByName name ), DUR * 4
 
@@ -458,8 +469,7 @@ class Search extends EventDispatcher
                             # ランダムでアニメーションを流す
                             @anim_timer = setTimeout =>
                               @animIllust(
-                                @ILLUST_NAME_ARR[Math.floor(Math.random() *
-                                @ILLUST_NAME_ARR.length)]
+                                "columbus"
                               )
                             , Math.random() * 5000 + 5000
 
