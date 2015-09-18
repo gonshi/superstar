@@ -263,7 +263,7 @@ class Search extends EventDispatcher
           ,
             duration: _dur
             delay: _delay
-            easing: "easeOutSine"
+            easing: EASE_OUT_BACK
             complete: =>
               _$portrait.remove()
               _targetPortrait.className += " show"
@@ -273,7 +273,7 @@ class Search extends EventDispatcher
           ,
             duration: _dur
             delay: _delay
-            easing: "easeInSine"
+            easing: "easeOutSine"
             queue: false
 
   setEpisode: ( episode )->
@@ -399,7 +399,7 @@ class Search extends EventDispatcher
               height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
               opacity: 1
 
-            @$result.find( ".info" ).velocity opacity: 1, _dur * 4
+            @$result.find( ".info" ).velocity opacity: 1, _dur * 2
 
             @is_diffusing = true
             do ( i )=>
@@ -407,12 +407,14 @@ class Search extends EventDispatcher
                 @diffusePortrait _diffuse_num
                 @$result.find( ".info" ).velocity opacity: 0
                 ,
-                  duration: _dur * 4
+                  duration: _dur * 2
                   delay: _dur * 2
               , _dur * 6
 
               if i == 2 # イントロ終了。本編への繋ぎ演出を行う。
                 setTimeout =>
+                  @$result_container.find( ".skip" ).hide()
+
                   @$result.velocity
                     backgroundColorAlpha: 0
                     borderColorAlpha: 0
@@ -430,16 +432,20 @@ class Search extends EventDispatcher
                     height: _width * 300 / 580
                     bottom: _bottom
                   ,
-                    duration: _dur * 2
+                    duration: _dur * 1.5
                     delay: _dur * 2
+                    easing: "easeOutSine"
                     complete: =>
-                      @$result.find( ".logo" ).velocity opacity: 0
+                      @$result.find( ".logo" ).velocity
+                        opacity: 0
+                        translateY: -120
                       ,
-                        duration: _dur * 2
+                        duration: _dur
                         delay: _dur * 6
+                        easing: EASE_IN_BACK
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]
-                          , _dur * 2, =>
+                          , _dur, =>
                             @$result_container.hide()
                             @$result.removeAttr "style"
                             @$result.find( ".info" ).removeAttr "style"
@@ -460,7 +466,7 @@ class Search extends EventDispatcher
                             @fin_intro = true
 
                           @showSearchBar()
-                , _dur * 18
+                , _dur * 12
 
   showResultByName: ( name )->
     # name の探索

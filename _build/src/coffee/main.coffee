@@ -32,6 +32,9 @@ bg = require( "./view/bg" )()
 resizeHandler = require( "./controller/resizeHandler" )()
 
 window.DUR = 500
+window.EASE_IN_BACK = [ 0.6, -0.28, 0.735, 0.045 ]
+window.EASE_OUT_BACK = [ 0.175, 0.885, 0.32, 1.275 ]
+window.EASE_IN_OUT_BACK = [ 0.68, -0.55, 0.265, 1.55 ]
 window.ENTER_KEY = 13
 window.path = "./"
 
