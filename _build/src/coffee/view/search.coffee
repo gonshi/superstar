@@ -287,6 +287,7 @@ class Search extends EventDispatcher
             easing: EASE_OUT_BACK
             complete: =>
               _$portrait.remove()
+              _targetPortrait.className += " transition" if skip
               _targetPortrait.className += " show"
               @is_diffusing = false if ++_diffused_num == diffuse_num
 
@@ -386,6 +387,10 @@ class Search extends EventDispatcher
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"
 
+    @$result.css
+      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+      opacity: 1
+
     ticker.listen "TIMER_FROM_START", ( t )=>
       _dur = if skip then 10 else DUR
 
@@ -416,10 +421,7 @@ class Search extends EventDispatcher
                 @$episode.text "笑った。"
                 ticker.clear "TIMER_FROM_START"
 
-            @$result.css
-              height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
-              opacity: 1
-
+            @$result.find( ".skip" ).show()
             @$result.find( ".info" ).velocity opacity: 1, _dur * 2
 
             @is_diffusing = true
@@ -627,8 +629,7 @@ class Search extends EventDispatcher
     @$result_container.find( ".skip" ).one "click", =>
       window.skip = true
       @$result_container.find( ".skip" ).hide()
-      #@$result_container.css opacity: 0
-      #@$portrait.find( "img" ).css visibility: "hidden"
+      @$result.velocity opacity: 0, DUR
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
