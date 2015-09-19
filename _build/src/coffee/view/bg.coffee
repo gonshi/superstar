@@ -130,11 +130,11 @@ class Bg extends EventDispatcher
       marginTop: ( @wrapper_height - @FOOTER_HEIGHT -
                    @$portrait_container.height() ) / 2
 
-    @$portrait = $( ".portrait" )
+    @$portrait = @$portrait_container.find( ".portrait" )
 
     @$portrait.on "click", ( e )=>
       @open_sound.currentTime = 0
-      @open_sound.play()
+      @open_sound.play() if !isSp
 
       @dispatch "PORTRAIT_CLICKED", this,
                 $( e.currentTarget ).find( "img" ).attr( "data-age" ),
@@ -142,7 +142,7 @@ class Bg extends EventDispatcher
 
     @$portrait.on "mouseenter", =>
       @mouseover_sound.currentTime = 0
-      @mouseover_sound.play()
+      @mouseover_sound.play() if !isSp
 
   setSize: ( wrapper_width, wrapper_height )->
     @wrapper_width = wrapper_width

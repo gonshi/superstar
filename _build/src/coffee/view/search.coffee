@@ -63,7 +63,6 @@ class Search extends EventDispatcher
     # sound
     @roulette_sound = new Audio()
     @roulette_sound.src = "audio/roulette.mp3"
-    @roulette_sound.volume = 0.2
 
     @open_sound = new Audio()
     @open_sound.src = "audio/open.mp3"
@@ -85,8 +84,6 @@ class Search extends EventDispatcher
     @step_sound.src = "audio/step.mp3"
     @fall_sound = new Audio()
     @fall_sound.src = "audio/fall.mp3"
-    @falled_sound = new Audio()
-    @falled_sound.src = "audio/falled.mp3"
 
   animIllust: (name)-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
@@ -98,7 +95,7 @@ class Search extends EventDispatcher
 
     switch name
       when "wright"
-        @wright_sound.play()
+        @wright_sound.play() if !isSp
         @$anim_illust.show().velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
@@ -125,17 +122,18 @@ class Search extends EventDispatcher
         setTimeout ( => @showResultByName name ), DUR * 4
 
       when "oh"
-        @oh_sound.play()
+        @oh_sound.play() if !isSp
         @$anim_illust.show().velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
           rotateZ: [-720, 0]
-        , DUR * 4, "easeOutSine", => @showResultByName name
+        , DUR * 4, "easeOutSine"
+        setTimeout ( => @showResultByName name ), DUR * 2
       when "newton"
         @$anim_illust.show().removeClass "fall"
         @$anim_illust.find(".illust-newton_tree").show()
 
-        @step_sound.play()
+        @step_sound.play() if !isSp
 
         _id = 1
         _interval = setInterval =>
@@ -151,7 +149,7 @@ class Search extends EventDispatcher
             clearInterval _interval
             @$anim_illust.addClass "fall"
 
-            @fall_sound.play()
+            @fall_sound.play() if !isSp
 
             setTimeout ( => @showResultByName name ), DUR * 4
 
@@ -160,7 +158,7 @@ class Search extends EventDispatcher
       when "beethoven"
         @beethoven_sound.volume = 0
         $(@beethoven_sound).animate volume: 1, DUR * 4
-        @beethoven_sound.play()
+        @beethoven_sound.play() if !isSp
         @$anim_illust.show()
 
         for i in [0...4]
@@ -348,7 +346,7 @@ class Search extends EventDispatcher
     return if @search_interval
 
     @open_sound.currentTime = 0
-    @open_sound.play()
+    @open_sound.play() if !isSp
 
     # 全角・半角変換
     age = age.replace( /[Ａ-Ｚａ-ｚ０-９]/g,( s )->
@@ -558,13 +556,15 @@ class Search extends EventDispatcher
       else
         @$result_container.removeClass "is_animating"
 
-      @roulette_sound.play()
+      @roulette_sound.volume = 0.2
+      @roulette_sound.play() if !isSp
       ticker.listen "AGE_COUNTUP", ( t )=>
         _age = Math.floor( t / 30 )
         if _age > age
           ticker.clear "AGE_COUNTUP"
-          @roulette_sound.pause()
-          @roulette_sound.currentTime = 0
+          $( @roulette_sound ).animate volume: 0, 100, =>
+            @roulette_sound.pause()
+            @roulette_sound.currentTime = 0
           @$age_num.text age
         else
           @$age_num.text _age
@@ -576,7 +576,7 @@ class Search extends EventDispatcher
     return unless @fin_intro?
 
     @close_sound.currentTime = 0
-    @close_sound.play()
+    @close_sound.play() if !isSp
 
     @$pin.velocity opacity: [ 0, 1 ], DUR
 
