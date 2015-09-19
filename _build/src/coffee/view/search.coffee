@@ -81,6 +81,12 @@ class Search extends EventDispatcher
     @beethoven_sound.src = "audio/beethoven.mp3"
     @wright_sound = new Audio()
     @wright_sound.src = "audio/wright.mp3"
+    @step_sound = new Audio()
+    @step_sound.src = "audio/step.mp3"
+    @fall_sound = new Audio()
+    @fall_sound.src = "audio/fall.mp3"
+    @falled_sound = new Audio()
+    @falled_sound.src = "audio/falled.mp3"
 
   animIllust: (name)-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
@@ -129,6 +135,8 @@ class Search extends EventDispatcher
         @$anim_illust.show().removeClass "fall"
         @$anim_illust.find(".illust-newton_tree").show()
 
+        @step_sound.play()
+
         _id = 1
         _interval = setInterval =>
           if _id < 5
@@ -138,8 +146,12 @@ class Search extends EventDispatcher
             @$anim_illust.find(".illust-newton_chara_container").
             attr "data-id": 3
           if _id == 7
+            @step_sound.pause()
+
             clearInterval _interval
             @$anim_illust.addClass "fall"
+
+            @fall_sound.play()
 
             setTimeout ( => @showResultByName name ), DUR * 4
 
@@ -469,7 +481,7 @@ class Search extends EventDispatcher
                             # ランダムでアニメーションを流す
                             @anim_timer = setTimeout =>
                               @animIllust(
-                                "columbus"
+                                "oh"
                               )
                             , Math.random() * 5000 + 5000
 
