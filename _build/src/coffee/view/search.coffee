@@ -61,6 +61,7 @@ class Search extends EventDispatcher
       zuckerberg: "マーク・ザッカーバーグ"
       jack: "ジャック・ドーシー"
       bolt: "ウサインボルト"
+      michael: "マイケル・ジャクソン"
 
     @ILLUST_NAME_ARR = []
     @ILLUST_NAME_ARR.push i for i of @ILLUST_NAME
@@ -89,6 +90,8 @@ class Search extends EventDispatcher
     @step_sound.src = "audio/step.mp3"
     @fall_sound = new Audio()
     @fall_sound.src = "audio/fall.mp3"
+    @cheer_sound = new Audio()
+    @cheer_sound.src = "audio/cheer.mp3"
 
   animIllust: (name)-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
@@ -192,11 +195,13 @@ class Search extends EventDispatcher
           @showResultByName name
         , DUR * 12
       when "zuckerberg"
-        @$anim_illust.show().velocity translateX: [-600, 0]
-        , DUR, => @showResultByName name
+        @$anim_illust.show().velocity translateX: [-200, 0]
+        , DUR, =>
+          setTimeout ( => @showResultByName name ), DUR * 2
       when "jack"
-        @$anim_illust.show().velocity translateX: [-600, 0]
-        , DUR, => @showResultByName name
+        @$anim_illust.show().velocity translateX: [-200, 0]
+        , DUR, =>
+          setTimeout ( => @showResultByName name ), DUR * 2
       when "bolt"
         @$anim_illust.show().velocity opacity: 1, DUR
         _$timer = @$anim_illust.find(".illust-bolt_timer")
@@ -224,7 +229,20 @@ class Search extends EventDispatcher
           , DUR * 3, "linear", =>
             clearInterval @bolt_anim
             @showResultByName name
+
+          setTimeout ( => @cheer_sound.play() ), 800
         , 2500
+      when "michael"
+        _i = 1
+
+        @michael_anim = setInterval =>
+          @$anim_illust.attr "data-id": _i++ % 7 + 1
+        , 150
+
+        @$anim_illust.velocity translateX: [@$win.width() + 1000, 0]
+        , DUR * 8, "linear", =>
+          clearInterval @michael_anim
+          @showResultByName name
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _diffused_num = 0
@@ -512,26 +530,30 @@ class Search extends EventDispatcher
                             @$result.find( ".name_particle" ).show()
                             @$result.find( ".social_container" ).show()
                             @$result.find( ".portrait_txt" ).css opacity: 1
+                            @$social_container_illust.show()
 
                             # social button event
                             @$social_container_illust.
                             find( ".facebook" ).one "click", =>
+                              if @$result_container.css( "display" ) == "block"
+                                @closeResult()
                               @animIllust "zuckerberg"
 
                             @$social_container_illust.
-                            find( ".tweet" ).one "click", => @animIllust "jack"
+                            find( ".tweet" ).one "click", =>
+                              if @$result_container.css( "display" ) == "block"
+                                @closeResult()
+                              @animIllust "jack"
 
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
                             @anim_timer = setTimeout =>
-                              ###
                               @animIllust(
                                 @ILLUST_NAME_ARR[Math.floor(Math.random() *
                                 @ILLUST_NAME_ARR.length)]
                               )
-                              ###
-                              @animIllust "bolt"
+                              #@animIllust "michael"
                             , Math.random() * 5000 + 5000
 
                             @fin_intro = true
@@ -631,10 +653,11 @@ class Search extends EventDispatcher
 
     @$pin.velocity opacity: [ 0, 1 ], DUR
 
+    @$anim_illust.hide() if @$anim_illust?
+
     @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
       @$result_container.hide()
 
-      @$anim_illust.hide() if @$anim_illust?
       # ランダムで次のアニメーションを流す
       if @ILLUST_NAME_ARR.length > 0
         @anim_timer = setTimeout =>
@@ -682,6 +705,22 @@ class Search extends EventDispatcher
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
+
+    @$room = $( ".room" )
+    @room_canvas = @$room.get 0
+    @room_ctx = @room_canvas.getContext "2d"
+    @room_canvas.width = @$win.width()
+    @room_canvas.height = @$win.height()
+    @room_ctx.fillRect 0, 0, @room_canvas.width, @room_canvas.height
+    @room_ctx.globalCompositeOperation = "xor"
+    @light_grad = new Image()
+    @light_grad.onload = =>
+      @room_ctx.drawImage(
+        @light_grad,
+        ( @$win.width() - @light_grad.width ) / 2,
+        ( @$win.height() - @light_grad.height ) / 2
+      )
+    @light_grad.src = "img/illust/light_grad.png"
 
 getInstance = ->
   if !instance

@@ -128,3 +128,13 @@
     font-size: 160px
     color: #fff
     +open-face(#000)
+
+  .illust-michael
+    $img: "illust/michael.png"
+    position: fixed
+    +trbl(auto, auto, $footer_height + 50px, -1 * image-width($img))
+    +sprite($img, 7)
+
+    @for $i from 1 through 7
+      &[data-id="#{$i}"]
+        +sprite-position($img, 7, $i)
