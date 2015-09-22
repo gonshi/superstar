@@ -49,6 +49,12 @@ class Search extends EventDispatcher
     # illust
     @$illust_container = $(".illust_container")
 
+    @$room = $( ".room" )
+    @room_canvas = @$room.get 0
+    @room_ctx = @room_canvas.getContext "2d"
+    @light_grad = new Image()
+    @light_grad.src = "img/illust/light_grad.png"
+
     # social
     @$social_container_illust = $(".social_container-illust")
 
@@ -62,9 +68,22 @@ class Search extends EventDispatcher
       jack: "ジャック・ドーシー"
       bolt: "ウサインボルト"
       michael: "マイケル・ジャクソン"
+      edison: "エジソン"
+
+    @ILLUST_AGE = # 年齢指定がある場合
+      michael: 26
+      edison: 32
 
     @ILLUST_NAME_ARR = []
-    @ILLUST_NAME_ARR.push i for i of @ILLUST_NAME
+    _exclude_list = [ "zuckerberg", "jack" ]
+
+    for i of @ILLUST_NAME
+      _not_exclude = true
+      for j in [ 0..._exclude_list.length]
+        if i == _exclude_list[ j ]
+          _not_exclude = false
+          break
+      @ILLUST_NAME_ARR.push i if _not_exclude
 
     # sound
     @roulette_sound = new Audio()
@@ -243,6 +262,51 @@ class Search extends EventDispatcher
         , DUR * 8, "linear", =>
           clearInterval @michael_anim
           @showResultByName name
+      when "edison"
+        @room_canvas.width = @win_width
+        @room_canvas.height = @win_height
+        @room_ctx.fillRect 0, 0, @room_canvas.width, @room_canvas.height
+
+        @$anim_illust.show()
+
+        @$room.show().velocity opacity: 1, DUR, =>
+          @$anim_illust.find( ".illust-edison-off" ).velocity
+            opacity: 1
+            translateY: [ 0, 100 ]
+          ,
+            duration: DUR
+            delay: DUR * 2
+            complete: =>
+              _dur = DUR * 2
+              _delay = DUR * 2
+
+              ticker.listen "LIGHT_BLUR", ( t )=>
+                _t = t - _delay
+                return if _t < 0
+
+                @room_ctx.globalCompositeOperation = "source-over"
+                @room_ctx.fillRect(
+                  0, 0, @room_canvas.width, @room_canvas.height
+                )
+                @room_ctx.globalCompositeOperation = "xor"
+
+                @room_ctx.globalAlpha = _t / _dur
+                @room_ctx.drawImage(
+                  @light_grad,
+                  ( @room_canvas.width - @light_grad.width ) / 2,
+                  ( @room_canvas.height - @light_grad.height ) / 2
+                )
+
+                @$anim_illust.find( ".illust-edison-on" ).css opacity: _t / _dur
+
+                if _t >= _dur
+                  ticker.clear "LIGHT_BLUR"
+                  setTimeout =>
+                    @showResultByName name
+                    @$room.one "click", =>
+                      @$room.velocity opacity: 0, => @$room.hide()
+                      @closeResult()
+                  , DUR * 3
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _diffused_num = 0
@@ -553,7 +617,7 @@ class Search extends EventDispatcher
                                 @ILLUST_NAME_ARR[Math.floor(Math.random() *
                                 @ILLUST_NAME_ARR.length)]
                               )
-                              #@animIllust "michael"
+                              #@animIllust "edison"
                             , Math.random() * 5000 + 5000
 
                             @fin_intro = true
@@ -564,7 +628,10 @@ class Search extends EventDispatcher
   showResultByName: ( name )->
     # name の探索
     for i of @episode
-      for j in [0...@episode[i].length]
+      if @ILLUST_AGE[ name ]? && parseInt( i ) != @ILLUST_AGE[ name ]
+        continue # 指定された年齢と異なる場合
+
+      for j in [ 0...@episode[i].length ]
         if @episode[i][j].name == @ILLUST_NAME[ name ]
           @showResult i, j
           return
@@ -667,7 +734,9 @@ class Search extends EventDispatcher
           )
         , Math.random() * 5000 + 5000
 
-  setWinWidth: ( win_width )-> @win_width = win_width
+  setWinSize: ( win_width, win_height) ->
+    @win_width = win_width
+    @win_height = win_height
 
   showSearchBar: ->
     return if parseInt( @$search_container.css "opacity" ) != 0
@@ -705,22 +774,6 @@ class Search extends EventDispatcher
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
-
-    @$room = $( ".room" )
-    @room_canvas = @$room.get 0
-    @room_ctx = @room_canvas.getContext "2d"
-    @room_canvas.width = @$win.width()
-    @room_canvas.height = @$win.height()
-    @room_ctx.fillRect 0, 0, @room_canvas.width, @room_canvas.height
-    @room_ctx.globalCompositeOperation = "xor"
-    @light_grad = new Image()
-    @light_grad.onload = =>
-      @room_ctx.drawImage(
-        @light_grad,
-        ( @$win.width() - @light_grad.width ) / 2,
-        ( @$win.height() - @light_grad.height ) / 2
-      )
-    @light_grad.src = "img/illust/light_grad.png"
 
 getInstance = ->
   if !instance

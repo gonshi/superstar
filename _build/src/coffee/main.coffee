@@ -91,7 +91,7 @@ $ ->
     _wrapper_width = $wrapper.width()
     _wrapper_height = $wrapper.height()
 
-    search.setWinWidth _win_width
+    search.setWinSize _win_width, _win_height
     bg.setSize _wrapper_width, _wrapper_height
     bg.arragePortrait()
 

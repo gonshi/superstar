@@ -64,8 +64,11 @@ body
     min-height: 0
 
 .room
+  display: none
   position: fixed
   +trbl(0, 0, 0, 0)
+  opacity: 0
+  z-index: index($zIndex, "room")
 
 /*-------------------------
  * lock

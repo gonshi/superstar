@@ -138,3 +138,26 @@
     @for $i from 1 through 7
       &[data-id="#{$i}"]
         +sprite-position($img, 7, $i)
+
+  .illust-edison
+    $img: "illust/light.png"
+    display: none
+    position: fixed
+    +trbl(auto, 0, $footer_height - 150px, 0)
+    width: image-width($img)
+    height: image-height($img) / 2
+    margin: auto
+
+  .illust-edison-off,
+  .illust-edison-on
+    position: absolute
+    +trbl(0, auto, auto, 0)
+    +sprite("illust/light.png", 2)
+
+  .illust-edison-off
+    +sprite-position("illust/light.png", 2, 0)
+    opacity: 0
+
+  .illust-edison-on
+    +sprite-position("illust/light.png", 2, 1)
+    opacity: 0
