@@ -60,6 +60,7 @@ class Search extends EventDispatcher
       beethoven: "ベートーベン"
       zuckerberg: "マーク・ザッカーバーグ"
       jack: "ジャック・ドーシー"
+      bolt: "ウサインボルト"
 
     @ILLUST_NAME_ARR = []
     @ILLUST_NAME_ARR.push i for i of @ILLUST_NAME
@@ -191,11 +192,39 @@ class Search extends EventDispatcher
           @showResultByName name
         , DUR * 12
       when "zuckerberg"
-        @$anim_illust.show().velocity translateX: [-200, 0]
+        @$anim_illust.show().velocity translateX: [-600, 0]
         , DUR, => @showResultByName name
       when "jack"
-        @$anim_illust.show().velocity translateX: [-200, 0]
+        @$anim_illust.show().velocity translateX: [-600, 0]
         , DUR, => @showResultByName name
+      when "bolt"
+        @$anim_illust.show().velocity opacity: 1, DUR
+        _$timer = @$anim_illust.find(".illust-bolt_timer")
+        _$pic = @$anim_illust.find(".illust-bolt_pic")
+
+        ticker.listen "BOLT_TIMER", ( t )->
+          _t = Math.floor( ( t + 5800 ) / 10 )
+
+          if _t >= 958
+            _$timer.text "09:58"
+            ticker.clear "BOLT_TIMER"
+          else
+            _t = ( "00" + _t ).slice -4
+            _$timer.text( "#{ _t }".slice(0, 2) + ":" +
+                          "#{ _t }".slice(2, 4) )
+
+        setTimeout =>
+          _i = 1
+
+          @bolt_anim = setInterval ->
+            _$pic.attr "data-id": _i++ % 12 + 1
+          , 30
+
+          _$pic.velocity translateX: [@$win.width() + 1000, 0]
+          , DUR * 3, "linear", =>
+            clearInterval @bolt_anim
+            @showResultByName name
+        , 2500
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
     _diffused_num = 0
@@ -496,10 +525,13 @@ class Search extends EventDispatcher
 
                             # ランダムでアニメーションを流す
                             @anim_timer = setTimeout =>
+                              ###
                               @animIllust(
                                 @ILLUST_NAME_ARR[Math.floor(Math.random() *
                                 @ILLUST_NAME_ARR.length)]
                               )
+                              ###
+                              @animIllust "bolt"
                             , Math.random() * 5000 + 5000
 
                             @fin_intro = true
