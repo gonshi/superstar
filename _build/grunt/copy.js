@@ -46,5 +46,21 @@ module.exports = {
       src:['**/*'],
       dest: '<%= config.dir.dist %>/audio'
     }]
+  },
+  font: {
+    files: [{
+      expand: true,
+      cwd: '<%= config.dir.src %>/font',
+      src:['**/*'],
+      dest: '<%= config.dir.tmp %>/font'
+    }]
+  },
+  fontProd: {
+    files: [{
+      expand: true,
+      cwd: '<%= config.dir.src %>/font',
+      src:['**/*'],
+      dest: '<%= config.dir.dist %>/font'
+    }]
   }
 };

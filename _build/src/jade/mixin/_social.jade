@@ -1,11 +1,10 @@
-mixin fb-share(img)
-  p.fb-share.social
-    button
-      img(src=img alt="シェア")
+mixin facebook(img)
+  p.facebook.social(data-url="#{meta.url}" data-name="#{meta.title}" data-picture="#{meta.image}"  data-description="#{meta.description}")
+    img(src=img alt="シェア")
 
 mixin tweet(img)
   - var url = encodeURIComponent(meta.url)
-  - var text = encodeURIComponent(meta.description)
+  - var text = encodeURIComponent(meta.title)
   p.tweet.social
     a(href!="http://twitter.com/share?url=" + url + "&text=" + text target="_blank")
       img(src=img alt="ツイート")

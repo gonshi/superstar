@@ -1,11 +1,13 @@
 extends /layout/_application
+include /mixin/_social
+
 block body
   h1.ttl-main
     img(src="img/common/logo.png" alt="あなたは今何歳？")
+  div.social_container.social_container-illust
+    +tweet("img/common/tweet.png")
+    +facebook("img/common/facebook.png")
   div.wrapper
-    div.social_container
-      include /include/embed/_tweet
-      include /include/embed/_facebook
     div.portrait_container
       div.portrait_row
         p.portrait
@@ -30,7 +32,9 @@ block body
       img.illust-beethoven_tone(src="img/illust/tone-3.png" alt="音符")
       img.illust-beethoven_tone(src="img/illust/tone-4.png" alt="音符")
     p.illust-zuckerberg
-      img.illust-beethoven_tone(src="img/illust/zuckerberg.png" alt="音符")
+      img(src="img/illust/zuckerberg.png" alt="ザッカーバーグ")
+    p.illust-jack
+      img(src="img/illust/jack.png" alt="ジャック・ドーシー")
   div.result_container.close
     div.result
       div.info

@@ -108,8 +108,10 @@ class Social
       _popupWidth = 650
       _popupHeight = 450
 
-      _left = ((_windowWidth / 2) - (_popupWidth / 2)) + _dualScreenLeft
-      _top = ((_windowHeight / 2) - (_popupHeight / 2)) + _dualScreenTop
+      #_left = ((_windowWidth / 2) - (_popupWidth / 2)) + _dualScreenLeft
+      _left = 0
+      #_top = ((_windowHeight / 2) - (_popupHeight / 2)) + _dualScreenTop
+      _top = 0
 
       window.open $(e.currentTarget).attr("href"), "twitter",
                   "width=#{_popupWidth}, height=#{_popupHeight}, " +

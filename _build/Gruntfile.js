@@ -19,6 +19,7 @@ module.exports = function(grunt) {
             'copy:img',
             'copy:js',
             'copy:audio',
+            'copy:font',
             'jade:compile',
             'compass:dev',
             'server'
@@ -34,6 +35,7 @@ module.exports = function(grunt) {
             'copy:imgProd',
             'copy:jsProd',
             'copy:audioProd',
+            'copy:fontProd',
             'compass:prod',
             'jade:prod'
         ]);
@@ -48,6 +50,7 @@ module.exports = function(grunt) {
             'copy:imgProd',
             'copy:jsProd',
             'copy:audioProd',
+            'copy:fontProd',
             'compass:prod',
             'jade:deploy'
         ]);

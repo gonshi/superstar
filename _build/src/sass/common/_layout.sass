@@ -22,6 +22,27 @@ body
   +image-size("common/logo.png", true, 2.4)
   z-index: index($zIndex, "ttl-main")
 
+/* -------------------------
+ * social
+/* -------------------------
+.social_container-illust
+  position: absolute
+  +trbl(auto, 10px, 10px, auto)
+  width: 300px
+  height: image-height("common/facebook.png")
+  +pie-clearfix
+  +scale(0.8)
+  z-index: index($zIndex, "ttl-main")
+
+.social
+  float: right
+  max-width: 100px
+  margin-right: 10px
+  cursor: pointer
+
+  &:first-child
+    margin-right: 0
+
 .wrapper
   position: absolute
   +trbl(0, 0, 0, 0)

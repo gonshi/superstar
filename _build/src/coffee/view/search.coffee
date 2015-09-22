@@ -49,6 +49,9 @@ class Search extends EventDispatcher
     # illust
     @$illust_container = $(".illust_container")
 
+    # social
+    @$social_container_illust = $(".social_container-illust")
+
     @ILLUST_NAME =
       wright: "ウィルバー・ライト"
       columbus: "コロンブス"
@@ -56,6 +59,7 @@ class Search extends EventDispatcher
       newton: "ニュートン"
       beethoven: "ベートーベン"
       zuckerberg: "マーク・ザッカーバーグ"
+      jack: "ジャック・ドーシー"
 
     @ILLUST_NAME_ARR = []
     @ILLUST_NAME_ARR.push i for i of @ILLUST_NAME
@@ -187,7 +191,10 @@ class Search extends EventDispatcher
           @showResultByName name
         , DUR * 12
       when "zuckerberg"
-        @$anim_illust.show().velocity translateX: [-600, 0]
+        @$anim_illust.show().velocity translateX: [-200, 0]
+        , DUR, => @showResultByName name
+      when "jack"
+        @$anim_illust.show().velocity translateX: [-200, 0]
         , DUR, => @showResultByName name
 
   diffusePortrait: ( diffuse_num )-> # introページでportrait画像をばら撒く演出
@@ -476,12 +483,22 @@ class Search extends EventDispatcher
                             @$result.find( ".name_particle" ).show()
                             @$result.find( ".social_container" ).show()
                             @$result.find( ".portrait_txt" ).css opacity: 1
+
+                            # social button event
+                            @$social_container_illust.
+                            find( ".facebook" ).one "click", =>
+                              @animIllust "zuckerberg"
+
+                            @$social_container_illust.
+                            find( ".tweet" ).one "click", => @animIllust "jack"
+
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
                             @anim_timer = setTimeout =>
                               @animIllust(
-                                "oh"
+                                @ILLUST_NAME_ARR[Math.floor(Math.random() *
+                                @ILLUST_NAME_ARR.length)]
                               )
                             , Math.random() * 5000 + 5000
 
