@@ -26,6 +26,7 @@ html(lang="ja")
       script(src="js/html5shiv.js")
   body
     block body
+    include /include/embed/_ga
     block scripts
       script.
         var ua = window.navigator.userAgent;
@@ -61,7 +62,7 @@ html(lang="ja")
           // android
           else if ((/android/i).test(ua)){
             window.zoom = window.innerWidth / #{meta.viewport};
-            document.body.style.zoom = window.zoom; 
+            document.body.style.zoom = window.zoom;
 
             window.onload = function(){
               window.zoom = window.innerWidth / #{meta.viewport};
@@ -86,7 +87,7 @@ html(lang="ja")
         script.
           window._DEBUG = {
             state: true
-          }; 
+          };
       if prod
         script(src="js/app.min.js?_="+dateParam)
       else
