@@ -112,7 +112,7 @@ class Search extends EventDispatcher
     @cheer_sound = new Audio()
     @cheer_sound.src = "audio/cheer.mp3"
 
-  animIllust: (name)-> # イラストによるアニメーション発動
+  animIllust: ( name )-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
       if @ILLUST_NAME_ARR[ i ] == name
         @ILLUST_NAME_ARR.splice i, 1
@@ -244,12 +244,13 @@ class Search extends EventDispatcher
             _$pic.attr "data-id": _i++ % 12 + 1
           , 30
 
-          _$pic.velocity translateX: [@$win.width() + 1000, 0]
+          _$pic.velocity translateX: [@$win.width() + 600, 0]
           , DUR * 3, "linear", =>
             clearInterval @bolt_anim
             @showResultByName name
 
-          setTimeout ( => @cheer_sound.play() ), 800
+          if !isSp
+            setTimeout ( => @cheer_sound.play() ), 800
         , 2500
       when "michael"
         _i = 1
@@ -258,7 +259,7 @@ class Search extends EventDispatcher
           @$anim_illust.attr "data-id": _i++ % 7 + 1
         , 150
 
-        @$anim_illust.velocity translateX: [@$win.width() + 1000, 0]
+        @$anim_illust.velocity translateX: [@$win.width() + 600, 0]
         , DUR * 8, "linear", =>
           clearInterval @michael_anim
           @showResultByName name
@@ -617,7 +618,6 @@ class Search extends EventDispatcher
                                 @ILLUST_NAME_ARR[Math.floor(Math.random() *
                                 @ILLUST_NAME_ARR.length)]
                               )
-                              #@animIllust "edison"
                             , Math.random() * 5000 + 5000
 
                             @fin_intro = true
@@ -643,6 +643,14 @@ class Search extends EventDispatcher
     return if @$result_container.css( "display" ) == "block"
 
     _info = @origin_episode[ age ][ id ]
+
+    for i in [ 0...@ILLUST_NAME_ARR.length ]
+      # アニメーション演出がある場合、まずアニメーションを実行する
+      if _info.name == @ILLUST_NAME[ @ILLUST_NAME_ARR[ i ] ] &&
+         !@ILLUST_AGE[ _info.name ]? ||
+         @ILLUST_AGE[ _info.name ] == parseInt( age )
+        @animIllust @ILLUST_NAME_ARR[ i ]
+        return
 
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
 
