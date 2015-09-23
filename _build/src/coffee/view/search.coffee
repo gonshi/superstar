@@ -693,8 +693,9 @@ class Search extends EventDispatcher
       _img = new Image()
       _img.src = _info.portrait
       _img.style.opacity = 1
-      @$portrait.empty()
-      @$portrait.append _img
+      @$portrait.find( "a" ).attr( href: _info.portraitLink ).
+      empty().
+      append _img
     else
       @$result_container.addClass "withoutPortrait"
 

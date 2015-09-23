@@ -11,6 +11,7 @@ class EpisodeData extends EventDispatcher
     @titleExp = /肩書: (.*?),/
     @episodeExp = /一言エピソード: (.*?),/
     @birthExp = /生年: (.*?),/
+    @portraitLinkExp = /画像リンク: (.*?),/
     @portraitExp = /画像: (.*?)$/
     @END_PHRASE = "以下未記述欄"
 
@@ -34,8 +35,11 @@ class EpisodeData extends EventDispatcher
 
         if _portrait_id != "なし"
           _portrait = "#{ path }img/portrait/#{ _portrait_id }.png"
+          _portrait_link =
+            response.feed.entry[ i ].content.$t.match( @portraitLinkExp )[ 1 ]
         else
           _portrait = ""
+          _portrait_link = ""
 
         @episode[ _age ] = [] if !@episode[ _age ]?
 
@@ -45,6 +49,7 @@ class EpisodeData extends EventDispatcher
           title: response.feed.entry[ i ].content.$t.match( @titleExp )[ 1 ]
           episode: response.feed.entry[ i ].content.$t.match( @episodeExp )[ 1 ]
           birth: response.feed.entry[ i ].content.$t.match( @birthExp )[ 1 ]
+          portraitLink: _portrait_link
           portrait: _portrait
 
       @dispatch "GOT_DATA", this, @episode
