@@ -189,18 +189,16 @@ class Search extends EventDispatcher
         @$anim_illust.show()
 
         for i in [0...4]
-          @$anim_illust.find( "img" ).eq(i).velocity
+          @$anim_illust.find( ".illust-beethoven_tone" ).
+          eq(i).velocity
             translateX: [-@$win.width() - 1000, 0]
           ,
             queue: false
             duration: DUR * 12
             easing: "linear"
-            complete: =>
-              $(@beethoven_sound).animate volume: 0, DUR * 4, =>
-                @beethoven_sound.pause()
 
           @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).velocity
-            translateY: 50 + Math.random() * 150
+            translateY: 30 + Math.random() * 50
           ,
             duration: DUR + Math.random() * DUR * 2
             loop: true
@@ -209,10 +207,14 @@ class Search extends EventDispatcher
         setTimeout =>
           for i in [0...4]
             @$anim_illust.find( ".illust-beethoven_tone" ).eq(i).
-            velocity "stop"
+            velocity "stop", true
+
+          $(@beethoven_sound).animate volume: 0, DUR * 4, =>
+            @beethoven_sound.pause()
 
           @showResultByName name
         , DUR * 12
+
       when "zuckerberg"
         @$anim_illust.show().velocity translateX: [-200, 0]
         , DUR, =>
@@ -487,11 +489,6 @@ class Search extends EventDispatcher
 
         _id = Math.floor( Math.random() * @episode[ age ].length )
         @showResult age, @episode[ age ][ _id ].id
-
-        @episode[ age ].splice _id, 1 # 同じ人が連続で出ないようにする
-
-        if @episode[ age ].length == 0
-          @episode[ age ] = $.extend true, [], @origin_episode[ age ]
     , 200
 
   setPortraitMax: ( num )-> @PORTRAIT_MAX = num
@@ -576,7 +573,7 @@ class Search extends EventDispatcher
                   ,
                     duration: _dur * 1.5
                     delay: _dur * 2
-                    easing: "easeOutSine"
+                    easing: EASE_IN_BACK
                     complete: =>
                       @$result.find( ".logo" ).velocity
                         opacity: 0
@@ -719,6 +716,11 @@ class Search extends EventDispatcher
 
     @$result.css
       height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+
+    # 同じ人が連続で出ないようにする
+    @episode[ age ].splice id, 1
+    if @episode[ age ].length == 0
+      @episode[ age ] = $.extend true, [], @origin_episode[ age ]
 
   closeResult: ->
     return unless @fin_intro?
