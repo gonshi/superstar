@@ -685,10 +685,7 @@ class Search extends EventDispatcher
     else
       @$name.css fontSize: 36
 
-    @$result.css
-      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
-      opacity: 1
-
+    @$result.css opacity: 1
     @$result.find( ".info" ).css opacity: 1
     @$result.find( ".portrait" ).show()
 
@@ -720,8 +717,13 @@ class Search extends EventDispatcher
         else
           @$age_num.text _age
 
-    @$result.css
-      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
+    if @$result_container.hasClass "withoutPortrait"
+      @$result.css
+        height: @$result.find( ".info" ).height() +
+                @RESULT_PADDING_HEIGHT - 100
+    else
+      @$result.css
+        height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
     # 同じ人が連続で出ないようにする
     @episode[ age ].splice id, 1
