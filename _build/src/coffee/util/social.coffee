@@ -79,10 +79,10 @@ class Social
       FB.ui
         display: "popup"
         method: "feed"
-        link: $(e.target).attr "data-url"
-        name: $(e.target).attr "data-name"
-        picture: $(e.target).attr "data-picture"
-        description: $(e.target).attr "data-description"
+        link: $(e.currentTarget).attr "data-url"
+        name: $(e.currentTarget).attr "data-name"
+        picture: $(e.currentTarget).attr "data-picture"
+        description: $(e.currentTarget).attr "data-description"
 
     # tweet
     $( ".tweet a" ).on "click", ( e ) ->
