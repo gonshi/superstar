@@ -156,6 +156,7 @@ class Search extends EventDispatcher
           rotateZ: [-720, 0]
         , DUR * 4, "easeOutSine"
         setTimeout ( => @showResultByName name ), DUR * 2
+
       when "newton"
         @$anim_illust.show().removeClass "fall"
         @$anim_illust.find(".illust-newton_tree").show()
@@ -610,12 +611,17 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
-                            @anim_timer = setTimeout =>
-                              @animIllust(
-                                @ILLUST_NAME_ARR[Math.floor(Math.random() *
-                                @ILLUST_NAME_ARR.length)]
-                              )
-                            , Math.random() * 5000 + 5000
+                            if location.search == "?bolt"
+                              @anim_timer = setTimeout =>
+                                @animIllust "bolt"
+                              , Math.random() * 5000 + 5000
+                            else
+                              @anim_timer = setTimeout =>
+                                @animIllust(
+                                  @ILLUST_NAME_ARR[Math.floor(Math.random() *
+                                  @ILLUST_NAME_ARR.length)]
+                                )
+                              , Math.random() * 5000 + 5000
 
                             @fin_intro = true
 
