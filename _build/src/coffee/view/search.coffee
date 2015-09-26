@@ -616,9 +616,9 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
-                            if location.search == "?bolt"
+                            if location.search == "?edison"
                               @anim_timer = setTimeout =>
-                                @animIllust "bolt"
+                                @animIllust "edison"
                               , Math.random() * 5000 + 5000
                             else
                               @anim_timer = setTimeout =>
