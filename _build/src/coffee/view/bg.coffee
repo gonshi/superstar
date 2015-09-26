@@ -35,7 +35,10 @@ class Bg extends EventDispatcher
       if @portrait_num != null && @portrait_shown_num == @portrait_num
         @dispatch "FIN_ARRANGE"
 
-    _complete_func() if @img[ img_num ].width > 0
+    setTimeout =>
+      console.log @img[ img_num ].width
+      _complete_func() if @img[ img_num ].width > 0
+    , 10
 
     @img[ img_num ].onload = -> _complete_func()
 
