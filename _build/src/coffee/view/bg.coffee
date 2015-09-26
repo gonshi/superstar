@@ -37,10 +37,11 @@ class Bg extends EventDispatcher
 
     setTimeout =>
       console.log @img[ img_num ].width
-      _complete_func() if @img[ img_num ].width > 0
-    , 10
-
-    @img[ img_num ].onload = -> _complete_func()
+      if @img[ img_num ].width > 0
+        _complete_func()
+      else
+        @img[ img_num ].onload = -> _complete_func()
+    , 100
 
   setPortrait: ( data )->
     @data = data
