@@ -44,6 +44,18 @@ body
   &:first-child
     margin-right: 0
 
+.aboutBtn
+  display: none
+  position: absolute
+  +trbl(auto, 150px, 15px, auto)
+  line-height: 40px
+  font-size: 12px
+  z-index: index($zIndex, "ttl-main")
+
+  button
+    &:hover
+      text-decoration: underline
+
 .wrapper
   position: absolute
   +trbl(0, 0, 0, 0)

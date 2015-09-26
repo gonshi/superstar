@@ -7,6 +7,8 @@ block body
   div.social_container.social_container-illust
     +tweet("img/common/tweet.png")
     +facebook("img/common/facebook.png")
+  p.aboutBtn
+    button このサイトについて
   div.wrapper
     div.portrait_container
       div.portrait_row
@@ -61,6 +63,30 @@ block body
         p.social.facebook(data-url="#{meta.url}" data-name="#{meta.title}" data-picture="#{meta.image}")
           img(src="img/common/facebook.png" alt="facebook")
       p.skip SKIP▶
+  section.about_container.close
+    div.about
+      h2.about_ttl このサイトについて
+      ul.about_list_container
+        li.about_list 「あの偉人は何歳のときに何を成し遂げたのか？」を、たくさん集めたサイトです。
+        li.about_list 画面中央の検索窓に年齢を入力したり、背景に流れている人物写真をクリックしたりしてみてください。
+        li.about_list ふと10秒くらいぼーっと眺めてみるのも良いかもしれません。
+        li.about_list.withMargin 人物画像は全て、Wikipedia上のパブリック・ドメイン、クリエイティブ・コモンズ、GNUライセンスの素材を利用しています。
+        li.about_list 効果音や楽曲データは以下のサイトから利用可能なものをお借りしました。ありがとうございます。
+          ul.audio_list_container
+            li.audio_list
+              a(href="http://www1.nhk.or.jp/creative/material/" target="_blank") NHK CREATIVE LIBRARY
+            li.audio_list
+              a(href="http://amachamusic.chagasi.com/music_kankinouta.html" target="_blank") フリー音楽素材「甘茶の音楽工房」
+            li.audio_list
+              a(href="http://soundeffect-lab.info/" target="_blank") 効果音ラボ
+            li.audio_list
+              a(href="http://soundarbour.sakura.ne.jp/" target="_blank") 音々亭 効果音素材
+            li.audio_list
+              a(href="http://www.kurage-kosho.info/" target="_blank") フリー効果音素材 くらげ工匠
+            li.audio_list
+              a(href="http://taira-komori.jpn.org/" target="_blank") 無料効果音で遊ぼう！
+            li.audio_list
+              a(href="http://commons.nicovideo.jp/" target="_blank") ニコニ･コモンズ
   div.year_container
     div.year_bar
       - var year;

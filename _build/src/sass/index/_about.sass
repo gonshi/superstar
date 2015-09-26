@@ -1,0 +1,36 @@
+.about_container
+  display: none
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  min-width: $minWidth
+  min-height: $minHeight
+  background-color: rgba(254, 253, 245, 0.8)
+  opacity: 0
+
+  .about
+    position: absolute
+    +trbl(0, 0, $footer_height, 0)
+    width: 800px
+    height: 480px
+    margin: auto
+    padding: 30px
+    background-color: rgba(254, 253, 245, 0.9)
+    border: 3px solid #000
+    border-radius: 10px
+
+  .about_ttl
+    font-size: 28px
+    text-align: center
+
+  .about_list_container
+    margin: 30px auto auto 15px
+
+  .about_list
+    margin: 5px auto
+    font-size: 14px
+    list-style-type: disc
+
+  .audio_list
+    margin: 5px auto
+    font-size: 12px
+    text-decoration: underline

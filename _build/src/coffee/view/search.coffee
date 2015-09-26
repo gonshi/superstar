@@ -49,6 +49,10 @@ class Search extends EventDispatcher
     # illust
     @$illust_container = $(".illust_container")
 
+    # about
+    @$aboutBtn = $(".aboutBtn")
+    @$about_container = $(".about_container")
+
     @$room = $( ".room" )
     @room_canvas = @$room.get 0
     @room_ctx = @room_canvas.getContext "2d"
@@ -594,6 +598,7 @@ class Search extends EventDispatcher
                             @$result.find( ".social_container" ).show()
                             @$result.find( ".portrait_txt" ).css opacity: 1
                             @$social_container_illust.show()
+                            @$aboutBtn.show()
 
                             # social button event
                             @$social_container_illust.
@@ -790,6 +795,14 @@ class Search extends EventDispatcher
       window.skip = true
       @$result_container.find( ".skip" ).hide()
       @$result.velocity opacity: 0, DUR
+
+    @$aboutBtn.on "click", =>
+      @$about_container.show().velocity opacity: 1, DUR
+
+    @$about_container.on "click", (e) =>
+      if $(e.target).hasClass "close"
+        @$about_container.velocity opacity: 0, DUR, =>
+          @$about_container.hide()
 
     $( window ).on "keydown", ( e )=>
       @search @$search.val() if e.keyCode == ENTER_KEY
