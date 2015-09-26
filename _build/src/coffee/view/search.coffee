@@ -2,7 +2,7 @@ EventDispatcher = require( "../util/eventDispatcher" )
 
 ticker = require( "../util/ticker" )()
 instance = null
-
+30
 class Search extends EventDispatcher
   constructor: ->
     super()
@@ -726,7 +726,7 @@ class Search extends EventDispatcher
     if @$result_container.hasClass "withoutPortrait"
       @$result.css
         height: @$result.find( ".info" ).height() +
-                @RESULT_PADDING_HEIGHT - 100
+                @RESULT_PADDING_HEIGHT - 80
     else
       @$result.css
         height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
@@ -766,9 +766,11 @@ class Search extends EventDispatcher
     return if parseInt( @$search_container.css "opacity" ) != 0
 
     @$search_container.velocity
-      translateY: [ 0, -20 ]
+      top: [ 0, -40 ]
       opacity: [ 1, 0 ]
-    , DUR * 3
+    ,
+      duration: DUR * 3
+      mobileHA: false
 
   exec: ->
     ###########################

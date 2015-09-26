@@ -38,7 +38,7 @@
   /* -------------------------
 
   .search_container
-    $search_width: 800px
+    $search_width: 300px
     $search_height: image-height("common/search.png")
     position: absolute
     +trbl(0, 0, $footer_height, 0)
@@ -50,7 +50,8 @@
 
     #{$is_sp}
       position: fixed
-      width: 560px
+      width: $search_width
+      +scale(1.5)
 
     .search
       float: left
@@ -63,7 +64,7 @@
       border: solid 3px #000
 
       #{$is_sp}
-        width: 560px - image-width("common/search.png")
+        width: $search_width - image-width("common/search.png")
 
       &.on
         font-size: 28px
