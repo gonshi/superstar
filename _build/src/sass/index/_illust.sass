@@ -142,6 +142,7 @@
 
   .illust-edison
     $img: "illust/light.png"
+    $img_sp: "illust/light-sp.png"
     display: none
     position: fixed
     +trbl(0, 0, 0, 0)
@@ -149,16 +150,29 @@
     height: image-height($img) / 2
     margin: auto
 
+    #{$is_sp}
+      width: image-width($img_sp)
+      height: image-height($img_sp) / 2
+
   .illust-edison-off,
   .illust-edison-on
     position: absolute
     +trbl(0, auto, auto, 0)
     +sprite("illust/light.png", 2)
 
+    #{$is_sp}
+      +sprite("illust/light-sp.png", 2)
+
   .illust-edison-off
     +sprite-position("illust/light.png", 2, 0)
     opacity: 0
 
+    #{$is_sp}
+      +sprite-position("illust/light-sp.png", 2, 0)
+
   .illust-edison-on
     +sprite-position("illust/light.png", 2, 1)
     opacity: 0
+
+    #{$is_sp}
+      +sprite-position("illust/light-sp.png", 2, 1)

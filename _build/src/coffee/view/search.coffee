@@ -537,7 +537,7 @@ class Search extends EventDispatcher
               when 0
                 @$episode.text "初めて泣いた。"
               when 1
-                @$episode.text "夢を見た。"
+                @$episode.text "歩き始めた。"
               when 2
                 @$episode.text "笑った。"
                 ticker.clear "TIMER_FROM_START"

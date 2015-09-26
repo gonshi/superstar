@@ -36,7 +36,6 @@ class Bg extends EventDispatcher
         @dispatch "FIN_ARRANGE"
 
     setTimeout =>
-      console.log @img[ img_num ].width
       if @img[ img_num ].width > 0
         _complete_func()
       else

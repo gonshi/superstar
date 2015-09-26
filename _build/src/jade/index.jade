@@ -44,25 +44,6 @@ block body
     div.illust-edison
       p.illust-edison-off
       p.illust-edison-on
-  div.result_container.close
-    div.result
-      div.info
-        p.name_container <span class="name"></span><span class="name_particle">は</span>
-        p.age_container <span class="age"><span class="num"></span>歳</span>のとき、
-        p.episode
-      p.portrait
-        a(href="/" target="_blank")
-      p.portrait_txt
-        span.portrait_name
-        span.portrait_title
-      p.logo 偉人年齢図鑑 あなたは今何歳？
-      div.social_container
-        p.social.tweet
-          a(href="/" target="_blank" data-url="#{meta.url}" data-title="#{meta.title}")
-            img(src="img/common/tweet.png" alt="tweet")
-        p.social.facebook(data-url="#{meta.url}" data-name="#{meta.title}" data-picture="#{meta.image}")
-          img(src="img/common/facebook.png" alt="facebook")
-      p.skip SKIP▶
   section.about_container.close
     div.about
       h2.about_ttl このサイトについて
@@ -87,6 +68,25 @@ block body
               a(href="http://taira-komori.jpn.org/" target="_blank") 無料効果音で遊ぼう！
             li.audio_list
               a(href="http://commons.nicovideo.jp/" target="_blank") ニコニ･コモンズ
+  div.result_container.close
+    div.result
+      div.info
+        p.name_container <span class="name"></span><span class="name_particle">は</span>
+        p.age_container <span class="age"><span class="num"></span>歳</span>のとき、
+        p.episode
+      p.portrait
+        a(href="/" target="_blank")
+      p.portrait_txt
+        span.portrait_name
+        span.portrait_title
+      p.logo 偉人年齢図鑑 あなたは今何歳？
+      div.social_container
+        p.social.tweet
+          a(href="/" target="_blank" data-url="#{meta.url}" data-title="#{meta.title}")
+            img(src="img/common/tweet.png" alt="tweet")
+        p.social.facebook(data-url="#{meta.url}" data-name="#{meta.title}" data-picture="#{meta.image}")
+          img(src="img/common/facebook.png" alt="facebook")
+      p.skip SKIP▶
   div.year_container
     div.year_bar
       - var year;

@@ -7,6 +7,10 @@
   background-color: rgba(254, 253, 245, 0.8)
   opacity: 0
 
+  #{$is_sp}
+    min-width: 0
+    min-height: 0
+
   .about
     position: absolute
     +trbl(0, 0, $footer_height, 0)
@@ -17,6 +21,10 @@
     background-color: rgba(254, 253, 245, 0.9)
     border: 3px solid #000
     border-radius: 10px
+
+    #{$is_sp}
+      width: 560px
+      height: 660px
 
   .about_ttl
     font-size: 28px
@@ -30,7 +38,13 @@
     font-size: 14px
     list-style-type: disc
 
+    #{$is_sp}
+      font-size: 18px
+
   .audio_list
     margin: 5px auto
     font-size: 12px
     text-decoration: underline
+
+    #{$is_sp}
+      font-size: 14px
