@@ -12,6 +12,7 @@ class EpisodeData extends EventDispatcher
     @episodeExp = /一言エピソード: (.*?),/
     @birthExp = /生年: (.*?),/
     @portraitLinkExp = /画像リンク: (.*?),/
+    @publicDomainExp = /パブリックドメイン: (.*?),/
     @portraitExp = /画像: (.*?)$/
     @END_PHRASE = "以下未記述欄"
 
@@ -33,7 +34,9 @@ class EpisodeData extends EventDispatcher
         _portrait_id =
           response.feed.entry[ i ].content.$t.match( @portraitExp )[ 1 ]
 
-        if _portrait_id != "なし" && !_portrait_id.match "_"
+        if _portrait_id != "なし" &&
+           response.feed.entry[ i ].
+           content.$t.match( @publicDomainExp )[ 1 ] == "TRUE"
           _portrait = "#{ path }img/portrait/#{ _portrait_id }.png"
           _portrait_link =
             response.feed.entry[ i ].content.$t.match( @portraitLinkExp )[ 1 ]
