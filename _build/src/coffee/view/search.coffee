@@ -688,7 +688,7 @@ class Search extends EventDispatcher
       replace( /\n| |　/g, "" ) } - #{ @$tweet_a.attr "data-title" }" ) }"
     )
 
-    @$facebook.attr "data-description": @$result.find( ".info" ).text().
+    @$facebook.attr "data-name": @$result.find( ".info" ).text().
     replace( /\n| |　/g, "" )
 
     @$age_num.text "0"
