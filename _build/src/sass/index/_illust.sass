@@ -12,9 +12,9 @@
   .illust-columbus
     $img: "illust/egg.png"
     position: fixed
-    +trbl(-0.6 * image-height($img), 0, auto, 0)
+    +trbl(-0.6 * image-height($img), auto, auto, 50%)
     +sprite($img, 2)
-    margin: auto
+    margin-left: -1 * image-width($img) / 2
 
     &.break
       +sprite-position($img, 2, 1)
@@ -145,14 +145,15 @@
     $img_sp: "illust/light-sp.png"
     display: none
     position: fixed
-    +trbl(0, 0, 0, 0)
+    +trbl(50%, auto, auto, 50%)
     width: image-width($img)
     height: image-height($img) / 2
-    margin: auto
+    margin: (-1 * image-height($img) / 4) auto auto (-1 * image-width($img) / 2)
 
     #{$is_sp}
       width: image-width($img_sp)
       height: image-height($img_sp) / 2
+      margin: (-1 * image-height($img_sp) / 4) auto auto (-1 * image-width($img_sp) / 2)
 
   .illust-edison-off,
   .illust-edison-on

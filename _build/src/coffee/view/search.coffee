@@ -622,9 +622,9 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
-                            if location.search == "?bolt"
+                            if location.search == "?columbus"
                               @anim_timer = setTimeout =>
-                                @animIllust "bolt"
+                                @animIllust "edison"
                               , Math.random() * 5000 + 5000
                             else
                               @anim_timer = setTimeout =>
@@ -780,8 +780,10 @@ class Search extends EventDispatcher
   showSearchBar: ->
     return if parseInt( @$search_container.css "opacity" ) != 0
 
+    _scale = if isSp then [ 1.5, 1.5 ] else [ 1, 1 ]
     @$search_container.velocity
-      top: [ 0, -40 ]
+      translateY: [ 0, -20 ]
+      scale: _scale
       opacity: [ 1, 0 ]
     ,
       duration: DUR * 3

@@ -41,10 +41,10 @@
     $search_width: 300px
     $search_height: image-height("common/search.png")
     position: absolute
-    +trbl(0, 0, $footer_height, 0)
+    +trbl(50%, auto, auto, 50%)
     width: $search_width
     height: $search_height
-    margin: auto
+    margin: (-$search_height / 2 - $footer_height / 2) auto auto (-$search_width / 2)
     box-shadow: 0 0 6px 0px #333
     opacity: 0
 

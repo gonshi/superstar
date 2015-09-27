@@ -160,8 +160,9 @@
       position: absolute
       width: 40px
 
-      @extend %hoverEffect
-      @extend %activeEffect
+      #{$is_pc}
+        @extend %hoverEffect
+        @extend %activeEffect
 
       img
         width: 100%
@@ -185,5 +186,6 @@
       +image-txt("common/skip.png")
       cursor: pointer
 
-      @extend %hoverEffect
-      @extend %activeEffect
+      #{$is_pc}
+        @extend %hoverEffect
+        @extend %activeEffect
