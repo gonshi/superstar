@@ -248,7 +248,7 @@ class Search extends EventDispatcher
           _i = 1
 
           @bolt_anim = setInterval ->
-            _$pic.attr "data-id": _i++ % 12 + 1
+            _$pic.attr "data-id": _i++ % 15 + 1
           , 30
 
           _$pic.velocity translateX: [@$win.width() + 600, 0]
@@ -489,7 +489,7 @@ class Search extends EventDispatcher
         @search_interval = null
 
         if !@episode[ age ]?
-          alert "該当する人物なし"
+          @showResult 0, 0, true # 0, 0: dummy data
           return
 
         _id = Math.floor( Math.random() * @episode[ age ].length )
@@ -508,9 +508,14 @@ class Search extends EventDispatcher
     @$result_container.show().velocity opacity: [ 1, 0 ], DUR, =>
       @$result_container.removeClass "is_animating"
 
-    @$result.css
-      height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
-      opacity: 1
+    @$result.css opacity: 1
+
+    if isSp
+      @$result.css
+        height: @$result.find( ".info" ).height() + 120
+    else
+      @$result.css
+        height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
 
     ticker.listen "TIMER_FROM_START", ( t )=>
       _dur = if skip then 10 else DUR
@@ -566,7 +571,7 @@ class Search extends EventDispatcher
 
                   if isSp
                     _width = 490
-                    _bottom = 150
+                    _bottom = 0
                   else
                     _width = 580
                     _bottom = 35
@@ -596,6 +601,7 @@ class Search extends EventDispatcher
                             @$result.find( ".logo" ).removeAttr "style"
                             @$result.find( ".name_particle" ).show()
                             @$result.find( ".social_container" ).show()
+                            @$result.find( ".close_container" ).show()
                             @$result.find( ".portrait_txt" ).css opacity: 1
                             @$social_container_illust.show()
                             @$aboutBtn.show()
@@ -616,9 +622,9 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
-                            if location.search == "?edison"
+                            if location.search == "?bolt"
                               @anim_timer = setTimeout =>
-                                @animIllust "edison"
+                                @animIllust "bolt"
                               , Math.random() * 5000 + 5000
                             else
                               @anim_timer = setTimeout =>
@@ -644,7 +650,10 @@ class Search extends EventDispatcher
           @showResult i, @episode[i][j].id
           return
 
-  showResult: ( age, id )->
+  showResult: ( age, id, is_nobody )->
+    # 検索窓がまだ出ていないときはブロック
+    return if parseInt( @$search_container.css "opacity" ) != 1
+
     clearTimeout @anim_timer if @anim_timer?
 
     # 既に表示中の場合はブロック
@@ -661,6 +670,8 @@ class Search extends EventDispatcher
         return
 
     @$result_container.removeClass( "withoutPortrait" ).addClass "is_animating"
+
+    @$result_container.addClass "nobody" if is_nobody?
 
     @$name.text _info.name
     @$portrait_name.text _info.name
@@ -727,6 +738,10 @@ class Search extends EventDispatcher
       @$result.css
         height: @$result.find( ".info" ).height() +
                 @RESULT_PADDING_HEIGHT - 80
+    else if @$result_container.hasClass "nobody"
+      @$result.css
+        height: @$result.find( ".info" ).height() +
+                @RESULT_PADDING_HEIGHT + 120
     else
       @$result.css
         height: @$result.find( ".info" ).height() + @RESULT_PADDING_HEIGHT
@@ -747,7 +762,7 @@ class Search extends EventDispatcher
     @$anim_illust.hide() if @$anim_illust?
 
     @$result_container.velocity opacity: [ 0, 1 ], DUR, =>
-      @$result_container.hide()
+      @$result_container.removeClass( "nobody" ).hide()
 
       # ランダムで次のアニメーションを流す
       if @ILLUST_NAME_ARR.length > 0
@@ -799,6 +814,9 @@ class Search extends EventDispatcher
       @$result.velocity opacity: 0, DUR
 
     @$aboutBtn.on "click", =>
+      if @$result_container.css( "display" ) == "block"
+        @$result_container.find( ".close" ).trigger "click"
+
       @$about_container.show().velocity opacity: 1, DUR
 
     @$about_container.on "click", (e) =>

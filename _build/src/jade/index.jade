@@ -68,12 +68,19 @@ block body
               a(href="http://taira-komori.jpn.org/" target="_blank") 無料効果音で遊ぼう！
             li.audio_list
               a(href="http://commons.nicovideo.jp/" target="_blank") ニコニ･コモンズ
+      p.close_container
+        button
+          img.close(src="img/common/close.png" alt="☓")
   div.result_container.close
     div.result
       div.info
         p.name_container <span class="name"></span><span class="name_particle">は</span>
         p.age_container <span class="age"><span class="num"></span>歳</span>のとき、
         p.episode
+      div.nobody_container
+        p.nobody_ttl 該当する人物はいません。
+        p.nobody_pic
+          img(src="img/common/nobody.png" alt="該当する人物なし")
       p.portrait
         a(href="/" target="_blank")
       p.portrait_txt
@@ -86,6 +93,9 @@ block body
             img(src="img/common/tweet.png" alt="tweet")
         p.social.facebook(data-url="#{meta.url}" data-name="#{meta.title}" data-picture="#{meta.image}")
           img(src="img/common/facebook.png" alt="facebook")
+      p.close_container
+        button
+          img.close(src="img/common/close.png" alt="☓")
       p.skip SKIP▶
   div.year_container
     div.year_bar

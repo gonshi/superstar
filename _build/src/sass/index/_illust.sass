@@ -116,11 +116,11 @@
     $img: "illust/bolt.png"
     position: fixed
     +trbl(auto, auto, $footer_height + 50px, -1 * image-width($img))
-    +sprite($img, 12)
+    +sprite($img, 15)
 
-    @for $i from 1 through 12
+    @for $i from 1 through 15
       &[data-id="#{$i}"]
-        +sprite-position($img, 12, $i)
+        +sprite-position($img, 15, $i)
 
   .illust-bolt_timer
     position: absolute
