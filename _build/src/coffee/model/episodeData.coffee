@@ -35,9 +35,7 @@ class EpisodeData extends EventDispatcher
         _portrait_id =
           response.feed.entry[ i ].content.$t.match( @portraitExp )[ 1 ]
 
-        if _portrait_id != "なし" &&
-           (response.feed.entry[ i ].
-           content.$t.match( @publicDomainExp )[ 1 ] == "TRUE" || true)
+        if _portrait_id != "なし"
           _portrait = "#{ path }img/portrait/#{ _portrait_id }.png"
           _portrait_link =
             response.feed.entry[ i ].content.$t.match( @portraitLinkExp )[ 1 ]
