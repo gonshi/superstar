@@ -72,6 +72,7 @@ html(lang="ja")
           }
         }
         else{
+          document.body.className += " is_pc";
           if ((/msie/i).test(ua)){
             if ((/msie 8./i).test(ver)){
               window.isIE8 = true;

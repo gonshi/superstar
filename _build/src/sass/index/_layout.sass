@@ -52,6 +52,11 @@
       position: fixed
       width: $search_width
       +scale(1.5)
+      filter: none
+      -webkit-filter: blur(0px)
+      -moz-filter: blur(0px)
+      -ms-filter: blur(0px)
+      filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='0')
 
     .search
       float: left
@@ -87,5 +92,7 @@
         height: 66px
         border: solid 3px #000
         border-left: none
-        @extend %hoverEffect
-        @extend %activeEffect
+
+        #{$is_pc}
+          @extend %hoverEffect
+          @extend %activeEffect

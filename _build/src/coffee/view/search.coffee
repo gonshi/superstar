@@ -641,7 +641,7 @@ class Search extends EventDispatcher
 
       for j in [ 0...@episode[i].length ]
         if @episode[i][j].name == @ILLUST_NAME[ name ]
-          @showResult i, j
+          @showResult i, @episode[i][j].id
           return
 
   showResult: ( age, id )->
