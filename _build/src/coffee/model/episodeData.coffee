@@ -2,6 +2,7 @@ EventDispatcher = require "../util/eventDispatcher"
 
 instance = null
 
+_count = 0
 class EpisodeData extends EventDispatcher
   constructor: ->
     super()
@@ -35,8 +36,8 @@ class EpisodeData extends EventDispatcher
           response.feed.entry[ i ].content.$t.match( @portraitExp )[ 1 ]
 
         if _portrait_id != "なし" &&
-           response.feed.entry[ i ].
-           content.$t.match( @publicDomainExp )[ 1 ] == "TRUE"
+           (response.feed.entry[ i ].
+           content.$t.match( @publicDomainExp )[ 1 ] == "TRUE" || true)
           _portrait = "#{ path }img/portrait/#{ _portrait_id }.png"
           _portrait_link =
             response.feed.entry[ i ].content.$t.match( @portraitLinkExp )[ 1 ]
