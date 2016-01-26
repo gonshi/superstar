@@ -126,7 +126,7 @@ class Search extends EventDispatcher
 
     switch name
       when "wright"
-        @wright_sound.play() if !isSp
+        #@wright_sound.play() if !isSp
         @$anim_illust.show().velocity
           translateX: [-@$win.width() - 1000, 0]
           translateY: [300, 0]
@@ -153,7 +153,7 @@ class Search extends EventDispatcher
         setTimeout ( => @showResultByName name ), DUR * 4
 
       when "oh"
-        @oh_sound.play() if !isSp
+        #@oh_sound.play() if !isSp
         @$anim_illust.show().velocity
           translateX: [@$win.width() + 1000, 0]
           translateY: [-@$win.height() + @$year_container.height(), 0]
@@ -165,7 +165,7 @@ class Search extends EventDispatcher
         @$anim_illust.show().removeClass "fall"
         @$anim_illust.find(".illust-newton_tree").show()
 
-        @step_sound.play() if !isSp
+        #@step_sound.play() if !isSp
 
         _id = 1
         _interval = setInterval =>
@@ -176,12 +176,12 @@ class Search extends EventDispatcher
             @$anim_illust.find(".illust-newton_chara_container").
             attr "data-id": 3
           if _id == 7
-            @step_sound.pause()
+            #@step_sound.pause()
 
             clearInterval _interval
             @$anim_illust.addClass "fall"
 
-            @fall_sound.play() if !isSp
+            #@fall_sound.play() if !isSp
 
             setTimeout ( => @showResultByName name ), DUR * 4
 
@@ -190,7 +190,7 @@ class Search extends EventDispatcher
       when "beethoven"
         @beethoven_sound.volume = 0
         $(@beethoven_sound).animate volume: 1, DUR * 4
-        @beethoven_sound.play() if !isSp
+        #@beethoven_sound.play() if !isSp
         @$anim_illust.show()
 
         for i in [0...4]
@@ -256,8 +256,8 @@ class Search extends EventDispatcher
             clearInterval @bolt_anim
             @showResultByName name
 
-          if !isSp
-            setTimeout ( => @cheer_sound.play() ), 800
+          #if !isSp
+          #  setTimeout ( => @cheer_sound.play() ), 800
         , 2500
       when "michael"
         _i = 1
@@ -584,16 +584,16 @@ class Search extends EventDispatcher
                     right: _right
                     bottom: _bottom
                   ,
-                    duration: _dur * 1.5
-                    delay: _dur * 2
+                    duration: _dur * 2
+                    delay: _dur * 3
                     easing: EASE_IN_BACK
                     complete: =>
                       @$result.find( ".logo-superstar" ).show().velocity
                         translateX: [0, -5]
                         opacity: [1, 0]
                       ,
-                        duration: _dur,
-                        delay: _dur * 2
+                        duration: _dur * 2,
+                        delay: _dur * 4
                         complete: =>
                           @$result.find( ".logo-superstar" ).velocity
                             opacity: [0, 1]
@@ -608,7 +608,7 @@ class Search extends EventDispatcher
                         translateY: -120
                       ,
                         duration: _dur
-                        delay: _dur * 7
+                        delay: _dur * 10
                         easing: EASE_IN_BACK
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]

@@ -123,6 +123,11 @@ $ ->
   search.showIntro()
   episodeData.getData()
 
+  unless isSp
+    bgm = new Audio()
+    bgm.src = "audio/superstar.mp3"
+    bgm.play()
+
   is_intro = true
 
   if window.DEBUG.state
