@@ -1,0 +1,53 @@
+.superstarPage
+  display: none
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  background-color: rgba(255, 255, 255, 0.8)
+  @include transition(background-color, 0.5s, ease 0s)
+  z-index: index($zIndex, "superstar")
+  opacity: 0
+
+.superstarSign
+  display: none
+  position: absolute
+  +trbl(50%, auto, auto, 50%)
+  +image-size("superstar/sign.png")
+  @include translate(50px, -150px)
+  opacity: 0
+
+.superstarLink
+  display: none
+  opacity: 0
+
+  &:first-child
+    a
+      @include translateX(-385px)
+
+  &:last-child
+    a
+      @include translateX(385px)
+
+  a
+    display: block
+    position: absolute
+    +trbl(-100px, 0, 0, 0)
+    +image-size("superstar/artist.png")
+    margin: auto
+
+    img
+      position: relative
+
+    &:hover
+      img
+        opacity: 0.7
+
+    &:before
+      position: absolute
+      +trbl(0, 0, 0, 0)
+      background-color: #fff
+      content: ""
+
+.superstarBand
+  position: absolute
+  +trbl(0, 0, auto, auto)
+  +image-size("superstar/band.png")

@@ -571,26 +571,44 @@ class Search extends EventDispatcher
 
                   if isSp
                     _width = 490
+                    _right = 0
                     _bottom = 0
                   else
-                    _width = 580
-                    _bottom = 35
+                    _width = 460
+                    _right = 95
+                    _bottom = 30
 
                   @$result.find( ".logo" ).velocity
                     width: _width
                     height: _width * 300 / 580
+                    right: _right
                     bottom: _bottom
                   ,
                     duration: _dur * 1.5
                     delay: _dur * 2
                     easing: EASE_IN_BACK
                     complete: =>
+                      @$result.find( ".logo-superstar" ).show().velocity
+                        translateX: [0, -5]
+                        opacity: [1, 0]
+                      ,
+                        duration: _dur,
+                        delay: _dur * 2
+                        complete: =>
+                          @$result.find( ".logo-superstar" ).velocity
+                            opacity: [0, 1]
+                          ,
+                            duration: _dur
+                            delay: _dur * 4
+                            complete: =>
+                              @$result.find( ".logo-superstar" ).hide()
+
                       @$result.find( ".logo" ).velocity
                         opacity: 0
                         translateY: -120
                       ,
                         duration: _dur
-                        delay: _dur * 6
+                        delay: _dur * 7
                         easing: EASE_IN_BACK
                         complete: =>
                           @$result_container.velocity opacity: [ 0, 1 ]
@@ -622,6 +640,7 @@ class Search extends EventDispatcher
                             @dispatch "FIN_INTRO"
 
                             # ランダムでアニメーションを流す
+                            ###
                             if location.search == "?columbus"
                               @anim_timer = setTimeout =>
                                 @animIllust "edison"
@@ -633,6 +652,7 @@ class Search extends EventDispatcher
                                   @ILLUST_NAME_ARR.length)]
                                 )
                               , Math.random() * 5000 + 5000
+                            ###
 
                             @fin_intro = true
 
@@ -682,10 +702,11 @@ class Search extends EventDispatcher
       href: "#{ @WIKI_LINK_ORIGIN }#{ encodeURIComponent( _info.name ) }"
 
     # set social text
+    _txt = encodeURIComponent( "#{ @$result.find( ".info" ).text().
+           replace( /\n| |　/g, "" ) } - #{ @$tweet_a.attr "data-title" }" )
     @$tweet_a.attr(
       "href": "http://twitter.com/share?url=#{@$tweet_a.attr "data-url"}" +
-      "&text=#{ encodeURIComponent( "#{ @$result.find( ".info" ).text().
-      replace( /\n| |　/g, "" ) } - #{ @$tweet_a.attr "data-title" }" ) }"
+      "&text=#{ _txt }"
     )
 
     @$facebook.attr "data-name": @$result.find( ".info" ).text().
@@ -752,6 +773,7 @@ class Search extends EventDispatcher
       @episode[ age ] = $.extend true, [], @origin_episode[ age ]
 
   closeResult: ->
+    return # for superstar
     return unless @fin_intro?
 
     @close_sound.currentTime = 0
@@ -765,6 +787,7 @@ class Search extends EventDispatcher
       @$result_container.removeClass( "nobody" ).hide()
 
       # ランダムで次のアニメーションを流す
+      ###
       if @ILLUST_NAME_ARR.length > 0
         @anim_timer = setTimeout =>
           @animIllust(
@@ -772,6 +795,7 @@ class Search extends EventDispatcher
             @ILLUST_NAME_ARR.length)]
           )
         , Math.random() * 5000 + 5000
+      ###
 
   setWinSize: ( win_width, win_height) ->
     @win_width = win_width

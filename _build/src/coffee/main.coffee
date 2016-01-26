@@ -84,8 +84,12 @@ $ ->
   bg.listen "LOAD_IMG", ( src, img_num )->
     search.setPortrait src, img_num
 
+  is_first = true
   resizeHandler.listen "RESIZED", ->
-    location.reload() if is_intro
+    return if !is_first
+    is_first = false
+    #return
+    #location.reload() if is_intro
     _win_width = $win.width()
     _win_height = $win.height()
     _wrapper_width = $wrapper.width()

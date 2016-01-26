@@ -22,6 +22,15 @@ body
   +image-size("common/logo.png", true, 2.4)
   z-index: index($zIndex, "ttl-main")
 
+  &:before
+    $bg: "superstar/logo_small.png"
+    position: absolute
+    +trbl(0, -125px, 0, auto)
+    +image-size($bg)
+    margin: auto
+    +bg($bg)
+    content: ""
+
 /* -------------------------
  * social
 /* -------------------------

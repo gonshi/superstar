@@ -151,6 +151,16 @@
       +bg("common/logo.svg")
       @extend %hideText
 
+    .logo-superstar
+      $bg: "superstar/logo.png"
+      display: none
+      position: absolute
+      +trbl(auto, -70px, -50px, auto)
+      +image-size($bg)
+      +bg($bg)
+      opacity: 0
+      @extend %hideText
+
     .social_container
       display: none
       position: absolute
@@ -176,6 +186,7 @@
 
     .close_container
       display: none
+      visibility: hidden
       position: absolute
       +trbl(0, 0, auto, auto)
 
