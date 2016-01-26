@@ -107,6 +107,10 @@ $ ->
     is_intro = false
     bg.finIntro()
 
+  search.listen "PLAY_VIDEO", ->
+    $(bgm).animate volume: 0, DUR * 2, ->
+      bgm.pause()
+
   ###################
   # INIT
   ###################

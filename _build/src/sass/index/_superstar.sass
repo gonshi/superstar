@@ -12,13 +12,23 @@
   position: absolute
   +trbl(50%, auto, auto, 50%)
   +image-size("superstar/sign.png")
-  @include translate(50px, -150px)
+  @include translate(50px, -120px)
   opacity: 0
 
-.superstarLink
+.superstarMovie
+  display: none
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  width: 640px
+  height: 360px
+  margin: auto
+  opacity: 0
+
+.superstarLink_container
   display: none
   opacity: 0
 
+.superstarLink
   &:first-child
     a
       @include translateX(-385px)

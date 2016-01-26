@@ -62,6 +62,9 @@ class Search extends EventDispatcher
     # social
     @$social_container_illust = $(".social_container-illust")
 
+    # superstar
+    @$superstarPage = $(".superstarPage")
+
     @ILLUST_NAME =
       wright: "ウィルバー・ライト"
       columbus: "コロンブス"
@@ -115,6 +118,12 @@ class Search extends EventDispatcher
     @fall_sound.src = "audio/fall.mp3"
     @cheer_sound = new Audio()
     @cheer_sound.src = "audio/cheer.mp3"
+
+    # set youtubeAPI
+    _script = document.createElement "script"
+    _$targetScript = document.querySelector "script"
+    _script.src = "https://www.youtube.com/iframe_api"
+    _$targetScript.parentNode.insertBefore _script, _$targetScript
 
   animIllust: ( name )-> # イラストによるアニメーション発動
     for i in [ 0...@ILLUST_NAME_ARR.length ] # 一度出現したアニメーションはもう出さない
@@ -723,7 +732,7 @@ class Search extends EventDispatcher
       @$name.css fontSize: 36
 
     @$result.css opacity: 1
-    @$result.find( ".info" ).css opacity: 1
+    @$result.find( ".info" ).velocity( "finish" ).velocity opacity: 1
     @$result.find( ".portrait" ).show()
 
     if _info.portrait.length > 0
@@ -771,6 +780,59 @@ class Search extends EventDispatcher
     @episode[ age ].splice id, 1
     if @episode[ age ].length == 0
       @episode[ age ] = $.extend true, [], @origin_episode[ age ]
+
+    setTimeout (=> @showSuperStarSign()), 4000
+
+  showSuperStarSign: ->
+    _dur = 500
+
+    @$superstarPage.show().velocity
+      opacity: [1, 0]
+    , _dur
+
+    @$superstarPage.find(".superstarSign").show().velocity
+      opacity: [1, 0]
+    ,
+      delay: _dur * 2
+      duration: _dur * 4
+      mobileHA: false
+      complete: =>
+        @$superstarPage.find(".superstarSign").velocity
+          opacity: [0, 1]
+        ,
+          delay: _dur * 4
+          duration: _dur * 4
+          complete: =>
+            @$superstarPage.find(".superstarSign").hide()
+            @showSuperStarMovie()
+
+  showSuperStarMovie: ->
+    _dur = 500
+    @$movie = $( "#movie" )
+    @dispatch "PLAY_VIDEO"
+
+    @movie_player = new YT.Player "movie",
+      width: @$movie.attr "width"
+      height: @$movie.attr "height"
+      videoId: @$movie.attr "data-youtube-id"
+      playerVars:
+        rel: 0
+        modestbranding: 1
+        wmode: "opaque"
+      events:
+        onReady: =>
+          @$movie = $( "#movie" )
+          @$movie.show().velocity opacity: [1, 0], _dur
+          @movie_player.playVideo()
+        onStateChange: (e) =>
+          if e.data == YT.PlayerState.ENDED
+            @$movie.velocity opacity: [0, 1], _dur, =>
+              @$movie.hide()
+
+              # show links
+              @$superstarPage.find(".superstarLink_container").show().velocity
+                opacity: [1, 0]
+              , _dur
 
   closeResult: ->
     return # for superstar
