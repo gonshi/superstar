@@ -580,7 +580,7 @@ class Search extends EventDispatcher
 
                   if isSp
                     _width = 490
-                    _right = 0
+                    _right = 35
                     _bottom = 0
                   else
                     _width = 460
@@ -731,7 +731,10 @@ class Search extends EventDispatcher
     else
       @$name.css fontSize: 36
 
-    @$result.css opacity: 1
+    @$result.css
+      opacity: 1
+      backgroundColorAlpha: 1
+      borderColorAlpha: 1
     @$result.find( ".info" ).velocity( "finish" ).velocity opacity: 1
     @$result.find( ".portrait" ).show()
 
@@ -784,30 +787,28 @@ class Search extends EventDispatcher
     setTimeout (=> @showSuperStarSign()), 4000
 
   showSuperStarSign: ->
-    _dur = 500
-
     @$superstarPage.show().velocity
       opacity: [1, 0]
-    , _dur
+    , DUR
 
     @$superstarPage.find(".superstarSign").show().velocity
       opacity: [1, 0]
     ,
-      delay: _dur * 2
-      duration: _dur * 4
+      delay: DUR * 2
+      duration: DUR * 4
       mobileHA: false
       complete: =>
         @$superstarPage.find(".superstarSign").velocity
           opacity: [0, 1]
         ,
-          delay: _dur * 4
-          duration: _dur * 4
+          delay: DUR * 4
+          duration: DUR * 4
+          mobileHA: false
           complete: =>
             @$superstarPage.find(".superstarSign").hide()
             @showSuperStarMovie()
 
   showSuperStarMovie: ->
-    _dur = 500
     @$movie = $( "#movie" )
     @dispatch "PLAY_VIDEO"
 
@@ -822,17 +823,23 @@ class Search extends EventDispatcher
       events:
         onReady: =>
           @$movie = $( "#movie" )
-          @$movie.show().velocity opacity: [1, 0], _dur
-          @movie_player.playVideo()
+          @$movie.show().velocity opacity: [1, 0], DUR
+          if isSp
+            @showSuperStarLinks()
+          else
+            @movie_player.playVideo()
         onStateChange: (e) =>
-          if e.data == YT.PlayerState.ENDED
-            @$movie.velocity opacity: [0, 1], _dur, =>
+          if e.data == YT.PlayerState.ENDED && !isSp
+            @$movie.velocity opacity: [0, 1], DUR, =>
               @$movie.hide()
+              @showSuperStarLinks()
 
-              # show links
-              @$superstarPage.find(".superstarLink_container").show().velocity
-                opacity: [1, 0]
-              , _dur
+  showSuperStarLinks: ->
+    @$superstarPage.find(".superstarLink_container").show().velocity
+      opacity: [1, 0]
+    ,
+      duration: DUR
+      mobileHA: false
 
   closeResult: ->
     return # for superstar

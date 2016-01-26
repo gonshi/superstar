@@ -15,6 +15,10 @@
   @include translate(50px, -120px)
   opacity: 0
 
+  #{$is_sp}
+    @include translate(-80px, 40px)
+    +image-size("superstar/sign.png", true, 1.1)
+
 .superstarMovie
   display: none
   position: absolute
@@ -23,6 +27,11 @@
   height: 360px
   margin: auto
   opacity: 0
+
+  #{$is_sp}
+    +trbl(-300px, 0, 0, 0)
+    width: 560px
+    height: 315px
 
 .superstarLink_container
   display: none
@@ -33,9 +42,15 @@
     a
       @include translateX(-385px)
 
+      #{$is_sp}
+        @include translateX(-192px)
+
   &:last-child
     a
       @include translateX(385px)
+
+      #{$is_sp}
+        @include translateX(192px)
 
   a
     display: block
@@ -43,6 +58,10 @@
     +trbl(-100px, 0, 0, 0)
     +image-size("superstar/artist.png")
     margin: auto
+
+    #{$is_sp}
+      +trbl(290px, 0, 0, 0)
+      +image-size("superstar/artist.png", true, 1.2)
 
     img
       position: relative
@@ -61,3 +80,6 @@
   position: absolute
   +trbl(0, 0, auto, auto)
   +image-size("superstar/band.png")
+
+  #{$is_sp}
+    +image-size("superstar/band.png", true, 1.5)
