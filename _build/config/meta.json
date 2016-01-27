@@ -1,9 +1,9 @@
 {
-  "title": "偉人年齢図鑑〜あなたはいま何歳？〜",
+  "title": "偉人年齢図鑑 with SuperStar 〜あなたはいま何歳？〜",
   "description": "あの偉人が歴史を変えたのは、何歳の頃だったのでしょう。",
   "keywords": "いま何歳, 年齢, 偉人",
-  "url": "http://ijin-nenrei.gonshi.net/",
-  "image": "http://ijin-nenrei.gonshi.net/img/ogp.png",
+  "url": "http://superstar.gonshi.net/",
+  "image": "http://superstar.gonshi.net/img/ogp.png",
   "site_name": "gonshi.github.io",
   "viewport": 640
 }

@@ -13,7 +13,7 @@ class Social
       js = document.createElement "script"
       js.id = "facebook-jssdk"
       js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&" +
-              "appId=959877374073274&version=v2.0"
+              "appId=940736769294726&version=v2.0"
       fjs.parentNode.insertBefore js, fjs
 
     # twitter
@@ -71,7 +71,7 @@ class Social
         js = document.createElement "script"
         js.id = "facebook-jssdk"
         js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&" +
-                "appId=959877374073274&version=v2.0"
+                "appId=940736769294726&version=v2.0"
         fjs.parentNode.insertBefore js, fjs
 
     # fb-share
