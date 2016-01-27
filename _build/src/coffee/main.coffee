@@ -50,6 +50,7 @@ $ ->
   $input = $password.find( ".password" )
   $enter = $password.find( ".enter" )
   is_intro = false
+  should_resize = false # intro終了後にresizeすべきかどうか
 
   ########################
   # PRIVATE
@@ -84,11 +85,12 @@ $ ->
   bg.listen "LOAD_IMG", ( src, img_num )->
     search.setPortrait src, img_num
 
-  is_first = true
-  resizeHandler.listen "RESIZED", ->
-    return if !is_first
-    is_first = false
-    #return
+  resizeHandler.listen "RESIZED", ( force ) ->
+    if is_intro
+      unless force
+        should_resize = true
+        return
+
     #location.reload() if is_intro
     _win_width = $win.width()
     _win_height = $win.height()
@@ -106,6 +108,7 @@ $ ->
   search.listen "FIN_INTRO", ->
     is_intro = false
     bg.finIntro()
+    resizeHandler.dispatch "RESIZED" if should_resize
 
   search.listen "PLAY_VIDEO", ->
     $(bgm).animate volume: 0, DUR * 2, ->
@@ -128,7 +131,7 @@ $ ->
     window.skip = false
 
   social.exec "fb", "tweet"
-  resizeHandler.dispatch "RESIZED"
+  resizeHandler.dispatch "RESIZED", this, true
   resizeHandler.exec()
   search.exec()
   episodeData.getData()
