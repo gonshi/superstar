@@ -784,7 +784,8 @@ class Search extends EventDispatcher
     if @episode[ age ].length == 0
       @episode[ age ] = $.extend true, [], @origin_episode[ age ]
 
-    setTimeout (=> @showSuperStarSign()), 4000
+    unless @$result_container.hasClass "nobody"
+      setTimeout (=> @showSuperStarSign()), 4000
 
   showSuperStarSign: ->
     @$superstarPage.show().velocity
@@ -844,7 +845,7 @@ class Search extends EventDispatcher
       mobileHA: false
 
   closeResult: ->
-    return # for superstar
+    return unless @$result_container.hasClass( "nobody" ) # for superstar
     return unless @fin_intro?
 
     @close_sound.currentTime = 0
