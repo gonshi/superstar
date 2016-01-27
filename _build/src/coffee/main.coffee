@@ -111,6 +111,13 @@ $ ->
     $(bgm).animate volume: 0, DUR * 2, ->
       bgm.pause()
 
+  $(".affirmModal_btn").one "click", (e) ->
+    bgm.play() if $(e.target).hasClass "affirmModal_on"
+
+    $(".affirmModal").velocity opacity: [0, 1], DUR, ->
+      $(".affirmModal").hide()
+      search.showIntro()
+
   ###################
   # INIT
   ###################
@@ -124,13 +131,14 @@ $ ->
   resizeHandler.dispatch "RESIZED"
   resizeHandler.exec()
   search.exec()
-  search.showIntro()
   episodeData.getData()
 
-  unless isSp
-    bgm = new Audio()
+  bgm = new Audio()
+
+  if isSp
+    bgm.src = "audio/superstar_sp.mp3"
+  else
     bgm.src = "audio/superstar.mp3"
-    bgm.play()
 
   is_intro = true
 

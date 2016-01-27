@@ -810,7 +810,7 @@ class Search extends EventDispatcher
 
   showSuperStarMovie: ->
     @$movie = $( "#movie" )
-    @dispatch "PLAY_VIDEO"
+    @dispatch "PLAY_VIDEO" unless isSp
 
     @movie_player = new YT.Player "movie",
       width: @$movie.attr "width"
@@ -823,13 +823,15 @@ class Search extends EventDispatcher
       events:
         onReady: =>
           @$movie = $( "#movie" )
-          @$movie.show().velocity opacity: [1, 0], DUR
-          if isSp
-            @showSuperStarLinks()
-          else
-            @movie_player.playVideo()
+          @$movie.show().velocity opacity: [1, 0], DUR, =>
+            if isSp
+              @showSuperStarLinks()
+            else
+              @movie_player.playVideo()
         onStateChange: (e) =>
-          if e.data == YT.PlayerState.ENDED && !isSp
+          if e.data == YT.PlayerState.PLAYING && isSp
+            @dispatch "PLAY_VIDEO"
+          else if e.data == YT.PlayerState.ENDED && !isSp
             @$movie.velocity opacity: [0, 1], DUR, =>
               @$movie.hide()
               @showSuperStarLinks()

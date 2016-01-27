@@ -83,3 +83,51 @@
 
   #{$is_sp}
     +image-size("superstar/band.png", true, 1.5)
+
+.affirmModal
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  background-color: #fffff6
+
+.affirmModal_txt
+  position: absolute
+  +trbl(50%, 0, auto, 0)
+  line-height: 2em
+  margin-top: -110px
+  text-align: center
+  font-size: 24px
+  font-weight: bold
+
+  #{$is_sp}
+    margin-top: -160px
+    font-size: 26px
+
+.affirmModal_btn
+  position: absolute
+  +trbl(0, 0, 0, 0)
+  margin: auto
+  cursor: pointer
+
+.affirmModal_on
+  $bg: "superstar/sound_on.png"
+  +image-size($bg)
+  +transform(translate(-90px, 90px) scale(0.5))
+  +sprite($bg, 2)
+
+  &:hover
+    +sprite-position($bg, 2, 1)
+
+  #{$is_sp}
+    +transform(translate(-120px, 80px))
+
+.affirmModal_off
+  $bg: "superstar/sound_off.png"
+  +image-size($bg)
+  +transform(translate(90px, 90px) scale(0.5))
+  +sprite($bg, 2)
+
+  &:hover
+    +sprite-position($bg, 2, 1)
+
+  #{$is_sp}
+    +transform(translate(120px, 80px))
