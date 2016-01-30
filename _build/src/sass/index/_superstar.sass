@@ -2,6 +2,7 @@
   display: none
   position: absolute
   +trbl(0, 0, 0, 0)
+  min-width: $minWidth
   background-color: rgba(255, 255, 255, 0.8)
   @include transition(background-color, 0.5s, ease 0s)
   z-index: index($zIndex, "superstar")
@@ -76,6 +77,10 @@
       background-color: #fff
       content: ""
 
+.superstarBand_container
+  position: relative
+  min-width: $minWidth
+
 .superstarBand
   position: absolute
   +trbl(0, 0, auto, auto)
@@ -87,6 +92,7 @@
 .affirmModal
   position: absolute
   +trbl(0, 0, 0, 0)
+  min-width: $minWidth
   background-color: #fffff6
 
 .affirmModal_txt
